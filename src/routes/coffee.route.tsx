@@ -1,10 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { postsQueryOptions } from "../utils/posts";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { coffeeQueryOptions } from "~/utils/coffee";
 
 export const Route = createFileRoute("/coffee")({
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(postsQueryOptions());
+    await context.queryClient.ensureQueryData(coffeeQueryOptions());
   },
   head: () => ({
     meta: [{ title: "Coffee" }],
@@ -13,30 +13,20 @@ export const Route = createFileRoute("/coffee")({
 });
 
 function CoffeeComponent() {
-  const coffeeQuery = useSuspenseQuery(postsQueryOptions());
+  const { data } = useSuspenseQuery(coffeeQueryOptions());
 
   return (
     <div className="p-2 flex gap-2">
       <ul className="list-disc pl-4">
-        {[
-          ...coffeeQuery.data,
-          { id: "i-do-not-exist", title: "Non-existent Post" },
-        ].map((post) => {
-          return (
-            <li key={post.id} className="whitespace-nowrap">
-              <Link
-                to="/posts/$postId"
-                params={{
-                  postId: post.id,
-                }}
-                className="block py-1 text-blue-800 hover:text-blue-600"
-                activeProps={{ className: "text-black font-bold" }}
-              >
-                <div>{post.title.substring(0, 20)}</div>
-              </Link>
+        {data.length === 0 ? (
+          <li className="whitespace-nowrap">No coffee found</li>
+        ) : (
+          data.map(({ id, name }) => (
+            <li key={id} className="whitespace-nowrap">
+              <div>{name}</div>
             </li>
-          );
-        })}
+          ))
+        )}
       </ul>
       <hr />
       <Outlet />

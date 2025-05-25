@@ -6,23 +6,22 @@ import { GET_COFFEE_KEY, GET_SINGLE_COFFEE_KEY } from "~/constants/query-keys";
 
 export type CoffeeType = {
   id: string;
-  title: string;
-  body: string;
+  name: string;
 };
 
 export const fetchCoffee = createServerFn({ method: "GET" }).handler(
   async () => {
-    console.info("Fetching posts...");
+    console.info("Fetching coffee...");
     return (
       axios
         // todo - use a real API endpoint
-        .get<Array<CoffeeType>>("https://jsonplaceholder.typicode.com/posts")
-        .then((r) => r.data.slice(0, 10))
+        .get<Array<CoffeeType>>("http:localhost:3000/api/coffee")
+        .then((r) => r.data)
     );
   },
 );
 
-export const postsQueryOptions = () =>
+export const coffeeQueryOptions = () =>
   queryOptions({
     queryKey: GET_COFFEE_KEY,
     queryFn: () => fetchCoffee(),
