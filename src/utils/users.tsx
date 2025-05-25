@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import axios from "redaxios";
-import { GET_SINGLE_USER_KEY, GET_USERS_KEY } from "~/utils/query-keys";
+import { GET_SINGLE_USER_KEY, GET_USERS_KEY } from "~/constants/query-keys";
 
 export type User = {
   id: number;

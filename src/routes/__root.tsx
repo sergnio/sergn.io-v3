@@ -13,7 +13,7 @@ import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
-import { COFFEE_ROUTE } from "~/utils/ui-routes";
+import { COFFEE_ROUTE } from "~/constants/ui-routes";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
