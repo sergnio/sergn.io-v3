@@ -1,6 +1,6 @@
 import { parseCookies, setCookie } from "@tanstack/react-start/server";
 import { createServerClient } from "@supabase/ssr";
-
+import { Database } from "database.types";
 /**
  * Creates a Supabase server instance using environment variables, which is used to interface
  * with the Supabase backend (provided the environment variables are set).
@@ -14,7 +14,7 @@ export function getSupabaseServerInstance() {
     );
   }
 
-  return createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  return createServerClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
     cookies: {
       // @ts-ignore Wait till Supabase overload works
       getAll() {

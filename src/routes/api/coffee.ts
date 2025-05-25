@@ -13,32 +13,38 @@ export const APIRoute = createAPIFileRoute("/api/coffee")({
       //   "https://jsonplaceholder.typicode.com/users/",
       // );
 
-      const res = {
-        data: [
-          {
-            id: 1,
-            name: "Espresso",
-          },
-          {
-            id: 2,
-            name: "Latte",
-          },
-          {
-            id: 3,
-            name: "Cappuccino",
-          },
-        ],
-      };
+      const res = supabase.from("coffee");
+      const { data } = await res.select(`
+    id,
+    name,
+    bag_size (
+      id,
+      g,
+      oz
+    ),
+    brew_method (
+      id,
+      name,
+      grinder (
+        id,
+        type
+      )
+    )
+  `);
+      if (!data?.length) {
+        return json({ error: "No coffee entries found" }, { status: 404 });
+      }
+      console.log("Coffee data:", JSON.stringify(data));
 
       return json(
-        res.data.map(({ id, name }) => ({
+        data.map(({ id, name }) => ({
           id: id.toString(),
           name,
         })),
       );
     } catch (e) {
       console.error(e);
-      return json({ error: "User not found" }, { status: 404 });
+      return json({ error: "Something went wrong!" }, { status: 500 });
     }
   },
 });
