@@ -1,7 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'redaxios'
 
-//
 export type User = {
   id: number
   name: string
