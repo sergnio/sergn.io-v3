@@ -1,20 +1,14 @@
 import { json } from "@tanstack/react-start";
 import { createAPIFileRoute } from "@tanstack/react-start/api";
-import axios from "redaxios";
-import { CoffeeType } from "~/utils/coffee";
 import { getSupabaseServerInstance } from "~/utils/supabase-instance";
 
 export const APIRoute = createAPIFileRoute("/api/coffee")({
   GET: async ({ request, params }) => {
     console.info(`Fetching all coffee... @`, request.url);
     try {
-      const supabase = getSupabaseServerInstance();
-      // const res = await axios.get<CoffeeType[]>(
-      //   "https://jsonplaceholder.typicode.com/users/",
-      // );
-
-      const res = supabase.from("coffee");
-      const { data } = await res.select(`
+      const serverInstance = getSupabaseServerInstance();
+      const table = serverInstance.from("coffee");
+      const { data } = await table.select(`
     id,
     name,
     bag_size (
@@ -31,6 +25,7 @@ export const APIRoute = createAPIFileRoute("/api/coffee")({
       )
     )
   `);
+
       if (!data?.length) {
         return json({ error: "No coffee entries found" }, { status: 404 });
       }
