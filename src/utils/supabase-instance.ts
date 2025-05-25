@@ -5,7 +5,7 @@ import { createServerClient } from "@supabase/ssr";
  * Creates a Supabase server instance using environment variables, which is used to interface
  * with the Supabase backend (provided the environment variables are set).
  */
-export function getSupabaseServerClient() {
+export function getSupabaseServerInstance() {
   const { SUPABASE_URL, SUPABASE_ANON_KEY } = process.env;
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
