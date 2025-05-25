@@ -21,9 +21,10 @@ function CoffeeComponent() {
         {data.length === 0 ? (
           <li className="whitespace-nowrap">No coffee found</li>
         ) : (
-          data.map(({ id, name }) => (
+          data.map(({ id, name, price }) => (
             <li key={id} className="whitespace-nowrap">
               <div>{name}</div>
+              <div>Price: {price}</div>
             </li>
           ))
         )}

@@ -11,6 +11,8 @@ export const APIRoute = createAPIFileRoute("/api/coffee")({
       const { data } = await table.select(`
     id,
     name,
+    price,
+    image_url,
     bag_size (
       id,
       g,
@@ -29,14 +31,9 @@ export const APIRoute = createAPIFileRoute("/api/coffee")({
       if (!data?.length) {
         return json({ error: "No coffee entries found" }, { status: 404 });
       }
-      console.log("Coffee data:", JSON.stringify(data));
+      console.log("Coffee data:", data[0].price);
 
-      return json(
-        data.map(({ id, name }) => ({
-          id: id.toString(),
-          name,
-        })),
-      );
+      return json(data);
     } catch (e) {
       console.error(e);
       return json({ error: "Something went wrong!" }, { status: 500 });

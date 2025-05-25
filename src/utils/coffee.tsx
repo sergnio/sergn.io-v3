@@ -7,6 +7,7 @@ import { GET_COFFEE_KEY, GET_SINGLE_COFFEE_KEY } from "~/constants/query-keys";
 export type CoffeeType = {
   id: string;
   name: string;
+  price: number;
 };
 
 export const fetchCoffee = createServerFn({ method: "GET" }).handler(
