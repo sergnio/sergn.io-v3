@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { FormEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
-import axios from "redaxios";
+import { loginFn } from "~/utils/login";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -16,24 +16,7 @@ interface Props {
 export function LoginComponent({ error }: Props) {
   const { navigate, invalidate } = useRouter();
   const loginMutation = useMutation({
-    mutationFn: async (formData: { email: string; password: string }) => {
-      try {
-        const { data } = await axios.post(
-          "http://localhost:3000/api/login",
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          },
-        );
-
-        return data;
-      } catch (error: any) {
-        const message = error.response?.data?.error || "Login failed";
-        throw new Error(message);
-      }
-    },
+    mutationFn: loginFn,
     onSuccess: async () => {
       await invalidate();
       navigate({ to: "/" });
@@ -47,7 +30,7 @@ export function LoginComponent({ error }: Props) {
     const email = form.get("email") as string;
     const password = form.get("password") as string;
 
-    loginMutation.mutate({ email, password });
+    loginMutation.mutate({ data: { email, password } });
   };
 
   return (
