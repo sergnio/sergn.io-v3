@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { FormEvent } from "react";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -7,8 +8,8 @@ export const Route = createFileRoute("/login")({
   component: LoginComponent,
 });
 
-function LoginComponent() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+export function LoginComponent() {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const username = form.get("username");

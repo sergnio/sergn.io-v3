@@ -10,23 +10,24 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as RedirectImport } from './routes/redirect'
-import { Route as DeferredImport } from './routes/deferred'
-import { Route as PathlessLayoutImport } from './routes/_pathlessLayout'
-import { Route as UsersRouteImport } from './routes/users.route'
-import { Route as PostsRouteImport } from './routes/posts.route'
-import { Route as LoginRouteImport } from './routes/login.route'
-import { Route as CoffeeRouteImport } from './routes/coffee.route'
-import { Route as IndexImport } from './routes/index'
-import { Route as UsersIndexImport } from './routes/users.index'
-import { Route as PostsIndexImport } from './routes/posts.index'
-import { Route as UsersUserIdImport } from './routes/users.$userId'
-import { Route as PostsPostIdImport } from './routes/posts.$postId'
-import { Route as PathlessLayoutNestedLayoutImport } from './routes/_pathlessLayout/_nested-layout'
-import { Route as PostsPostIdDeepImport } from './routes/posts_.$postId.deep'
-import { Route as PathlessLayoutNestedLayoutRouteBImport } from './routes/_pathlessLayout/_nested-layout/route-b'
-import { Route as PathlessLayoutNestedLayoutRouteAImport } from './routes/_pathlessLayout/_nested-layout/route-a'
+import {Route as rootRoute} from './routes/__root'
+import {Route as RedirectImport} from './routes/redirect'
+import {Route as DeferredImport} from './routes/deferred'
+import {Route as PathlessLayoutImport} from './routes/_pathlessLayout'
+import {Route as AuthRouteImport} from './routes/_authRoute'
+import {Route as UsersRouteImport} from './routes/users.route'
+import {Route as PostsRouteImport} from './routes/posts.route'
+import {Route as LoginRouteImport} from './routes/login.route'
+import {Route as CoffeeRouteImport} from './routes/coffee.route'
+import {Route as IndexImport} from './routes/index'
+import {Route as UsersIndexImport} from './routes/users.index'
+import {Route as PostsIndexImport} from './routes/posts.index'
+import {Route as UsersUserIdImport} from './routes/users.$userId'
+import {Route as PostsPostIdImport} from './routes/posts.$postId'
+import {Route as PathlessLayoutNestedLayoutImport} from './routes/_pathlessLayout/_nested-layout'
+import {Route as PostsPostIdDeepImport} from './routes/posts_.$postId.deep'
+import {Route as PathlessLayoutNestedLayoutRouteBImport} from './routes/_pathlessLayout/_nested-layout/route-b'
+import {Route as PathlessLayoutNestedLayoutRouteAImport} from './routes/_pathlessLayout/_nested-layout/route-a'
 
 // Create/Update Routes
 
@@ -44,6 +45,11 @@ const DeferredRoute = DeferredImport.update({
 
 const PathlessLayoutRoute = PathlessLayoutImport.update({
   id: '/_pathlessLayout',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthRouteRoute = AuthRouteImport.update({
+  id: '/_authRoute',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -165,6 +171,13 @@ declare module '@tanstack/react-router' {
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof UsersRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authRoute': {
+      id: '/_authRoute'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRoute
     }
     '/_pathlessLayout': {
@@ -348,6 +361,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRouteRoute
   '/posts': typeof PostsRouteRouteWithChildren
   '/users': typeof UsersRouteRouteWithChildren
+  '/_authRoute': typeof AuthRouteRoute
   '/_pathlessLayout': typeof PathlessLayoutRouteWithChildren
   '/deferred': typeof DeferredRoute
   '/redirect': typeof RedirectRoute
@@ -401,6 +415,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/posts'
     | '/users'
+    | '/_authRoute'
     | '/_pathlessLayout'
     | '/deferred'
     | '/redirect'
@@ -421,6 +436,7 @@ export interface RootRouteChildren {
   LoginRouteRoute: typeof LoginRouteRoute
   PostsRouteRoute: typeof PostsRouteRouteWithChildren
   UsersRouteRoute: typeof UsersRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRoute
   PathlessLayoutRoute: typeof PathlessLayoutRouteWithChildren
   DeferredRoute: typeof DeferredRoute
   RedirectRoute: typeof RedirectRoute
@@ -433,6 +449,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRouteRoute: LoginRouteRoute,
   PostsRouteRoute: PostsRouteRouteWithChildren,
   UsersRouteRoute: UsersRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRoute,
   PathlessLayoutRoute: PathlessLayoutRouteWithChildren,
   DeferredRoute: DeferredRoute,
   RedirectRoute: RedirectRoute,
@@ -454,6 +471,7 @@ export const routeTree = rootRoute
         "/login",
         "/posts",
         "/users",
+        "/_authRoute",
         "/_pathlessLayout",
         "/deferred",
         "/redirect",
@@ -482,6 +500,9 @@ export const routeTree = rootRoute
         "/users/$userId",
         "/users/"
       ]
+    },
+    "/_authRoute": {
+      "filePath": "_authRoute.tsx"
     },
     "/_pathlessLayout": {
       "filePath": "_pathlessLayout.tsx",
