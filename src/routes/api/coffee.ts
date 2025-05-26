@@ -3,7 +3,7 @@ import { createAPIFileRoute } from "@tanstack/react-start/api";
 import { getSupabaseServerInstance } from "~/utils/supabase-instance";
 
 export const APIRoute = createAPIFileRoute("/api/coffee")({
-  GET: async ({ request, params }) => {
+  GET: async ({ request }) => {
     console.info(`Fetching all coffee... @`, request.url);
     try {
       const serverInstance = getSupabaseServerInstance();
@@ -31,7 +31,6 @@ export const APIRoute = createAPIFileRoute("/api/coffee")({
       if (!data?.length) {
         return json({ error: "No coffee entries found" }, { status: 404 });
       }
-      console.log("Coffee data:", data[0].price);
 
       return json(data);
     } catch (e) {

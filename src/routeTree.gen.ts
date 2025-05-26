@@ -16,6 +16,7 @@ import { Route as DeferredImport } from './routes/deferred'
 import { Route as PathlessLayoutImport } from './routes/_pathlessLayout'
 import { Route as UsersRouteImport } from './routes/users.route'
 import { Route as PostsRouteImport } from './routes/posts.route'
+import { Route as LoginRouteImport } from './routes/login.route'
 import { Route as CoffeeRouteImport } from './routes/coffee.route'
 import { Route as IndexImport } from './routes/index'
 import { Route as UsersIndexImport } from './routes/users.index'
@@ -55,6 +56,12 @@ const UsersRouteRoute = UsersRouteImport.update({
 const PostsRouteRoute = PostsRouteImport.update({
   id: '/posts',
   path: '/posts',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRouteRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -137,6 +144,13 @@ declare module '@tanstack/react-router' {
       path: '/coffee'
       fullPath: '/coffee'
       preLoaderRoute: typeof CoffeeRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRoute
     }
     '/posts': {
@@ -296,6 +310,7 @@ const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/coffee': typeof CoffeeRouteRoute
+  '/login': typeof LoginRouteRoute
   '/posts': typeof PostsRouteRouteWithChildren
   '/users': typeof UsersRouteRouteWithChildren
   '': typeof PathlessLayoutNestedLayoutRouteWithChildren
@@ -313,6 +328,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/coffee': typeof CoffeeRouteRoute
+  '/login': typeof LoginRouteRoute
   '': typeof PathlessLayoutNestedLayoutRouteWithChildren
   '/deferred': typeof DeferredRoute
   '/redirect': typeof RedirectRoute
@@ -329,6 +345,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/coffee': typeof CoffeeRouteRoute
+  '/login': typeof LoginRouteRoute
   '/posts': typeof PostsRouteRouteWithChildren
   '/users': typeof UsersRouteRouteWithChildren
   '/_pathlessLayout': typeof PathlessLayoutRouteWithChildren
@@ -349,6 +366,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/coffee'
+    | '/login'
     | '/posts'
     | '/users'
     | ''
@@ -365,6 +383,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/coffee'
+    | '/login'
     | ''
     | '/deferred'
     | '/redirect'
@@ -379,6 +398,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/coffee'
+    | '/login'
     | '/posts'
     | '/users'
     | '/_pathlessLayout'
@@ -398,6 +418,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CoffeeRouteRoute: typeof CoffeeRouteRoute
+  LoginRouteRoute: typeof LoginRouteRoute
   PostsRouteRoute: typeof PostsRouteRouteWithChildren
   UsersRouteRoute: typeof UsersRouteRouteWithChildren
   PathlessLayoutRoute: typeof PathlessLayoutRouteWithChildren
@@ -409,6 +430,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CoffeeRouteRoute: CoffeeRouteRoute,
+  LoginRouteRoute: LoginRouteRoute,
   PostsRouteRoute: PostsRouteRouteWithChildren,
   UsersRouteRoute: UsersRouteRouteWithChildren,
   PathlessLayoutRoute: PathlessLayoutRouteWithChildren,
@@ -429,6 +451,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/coffee",
+        "/login",
         "/posts",
         "/users",
         "/_pathlessLayout",
@@ -442,6 +465,9 @@ export const routeTree = rootRoute
     },
     "/coffee": {
       "filePath": "coffee.route.tsx"
+    },
+    "/login": {
+      "filePath": "login.route.tsx"
     },
     "/posts": {
       "filePath": "posts.route.tsx",
