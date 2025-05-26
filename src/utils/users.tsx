@@ -2,15 +2,12 @@ import { queryOptions } from "@tanstack/react-query";
 import { GET_AUTHENTICATED_USERS_KEY } from "~/constants/query-keys";
 import { createServerFn } from "@tanstack/react-start";
 import { getSupabaseServerInstance } from "~/utils/supabase-instance";
-import { redirect } from "@tanstack/react-router";
 
 export type User = {
   id: number;
   name: string;
   email: string;
 };
-
-export const DEPLOY_URL = "http://localhost:3000";
 
 const fetchAuthenticatedUser = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -30,19 +27,19 @@ const fetchAuthenticatedUser = createServerFn({ method: "GET" }).handler(
   },
 );
 
-export const loggedInUserQueryOptions = () => {
-  return queryOptions({
+export const loggedInUserQueryOptions = () =>
+  queryOptions({
     queryKey: GET_AUTHENTICATED_USERS_KEY,
     queryFn: fetchAuthenticatedUser,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
-};
 
 export const loginUser = createServerFn({ method: "POST" })
   .validator((data: { email: unknown; password: unknown }) => {
     if (!data.email || !data.password) {
       throw new Error("Email and password are required fields");
     }
+
     return data as { email: string; password: string };
   })
   .handler(async ({ data }) => {

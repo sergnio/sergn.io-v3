@@ -1,9 +1,7 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { FormEvent } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { GET_AUTHENTICATED_USERS_KEY } from "~/constants/query-keys";
-import { loginUser } from "~/utils/users";
 import { ErrorAlert } from "~/components/ErrorAlert";
+import useLoginMutation from "~/hooks/mutations/useLoginMutation";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -17,17 +15,7 @@ interface Props {
 }
 
 export function LoginComponent({ error }: Props) {
-  const { navigate, invalidate } = useRouter();
-  const queryClient = useQueryClient();
-  const { mutate, error: mutationError } = useMutation({
-    mutationFn: loginUser,
-    onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: GET_AUTHENTICATED_USERS_KEY });
-      await invalidate();
-      navigate({ to: "/" });
-      return;
-    },
-  });
+  const { mutate, error: mutationError, isPending } = useLoginMutation();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,14 +23,13 @@ export function LoginComponent({ error }: Props) {
     const email = form.get("email") as string;
     const password = form.get("password") as string;
 
-    console.log("Logging in with:", { email, password });
     mutate({ data: { email, password } });
   };
 
   return (
     <div className="p-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">Login</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" inert={isPending}>
         <div>
           <label
             htmlFor="email"
