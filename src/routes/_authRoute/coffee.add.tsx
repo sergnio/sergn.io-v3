@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Autocomplete } from "~/components/composite/autocomplete";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -22,8 +23,11 @@ function AddCoffee() {
           <input type="text" id="coffeeName" name="coffeeName" required />
         </div>
         <div>
-          <label htmlFor="coffeeType">Coffee Type:</label>
-          <input type="text" id="coffeeType" name="coffeeType" required />
+          <Autocomplete
+            required
+            label={"Bought From"}
+            options={["SK Coffee", "Avo Coffee Roasters"]}
+          />
         </div>
         <button type="submit">Add Coffee</button>
       </form>

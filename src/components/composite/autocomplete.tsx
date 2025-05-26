@@ -8,17 +8,19 @@ import {
 } from "react";
 import "./Autocomplete.css";
 import { useOutsideClick } from "~/hooks/utilities/useOutsideClick";
+import { camelize } from "~/utils/transformers";
+import { uuid } from "zod/v4";
 
 interface Props
   extends Omit<
     InputHTMLAttributes<HTMLInputElement>,
-    "placeholder" | "onChange"
+    "placeholder" | "onChange" | "id" | "name"
   > {
   options: string[];
   defaultValue?: string;
   label?: string;
-  onConfirm: (selectedValue: string) => void;
-  onChange: (newValue: string) => void;
+  onConfirm?: (selectedValue: string) => void;
+  onChange?: (newValue: string) => void;
   passthroughStyles?: {
     input?: string;
     container?: string;
@@ -38,6 +40,7 @@ export const Autocomplete = ({
   passthroughStyles,
   ...rest
 }: Props) => {
+  const camelizedLabel = camelize(label ?? `autocomplete-${uuid()}`);
   const [value, setValue] = useState<string>(defaultValue ?? EMPTY);
   const [filtered, setFiltered] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
@@ -72,7 +75,7 @@ export const Autocomplete = ({
         if (activeIndex >= 0) {
           const selected = filtered[activeIndex];
           setValue(selected);
-          onConfirm(selected);
+          onConfirm?.(selected);
           setIsOpen(false);
         }
         break;
@@ -85,7 +88,7 @@ export const Autocomplete = ({
 
   const handleOptionClick = (option: string) => {
     setValue(option);
-    onConfirm(option);
+    onConfirm?.(option);
     setIsOpen(false);
   };
 
@@ -104,7 +107,7 @@ export const Autocomplete = ({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    onChange(newValue);
+    onChange?.(newValue);
     setValue(newValue);
     setActiveIndex(-1);
 
@@ -127,6 +130,8 @@ export const Autocomplete = ({
     >
       <input
         {...rest}
+        id={camelizedLabel}
+        name={camelizedLabel}
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
