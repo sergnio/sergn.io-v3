@@ -1,8 +1,8 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { FormEvent } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { loginFn } from "~/utils/login";
 import { GET_AUTHENTICATED_USERS_KEY } from "~/constants/query-keys";
+import { loginUser } from "~/utils/users";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -18,7 +18,7 @@ export function LoginComponent({ error }: Props) {
   const { navigate, invalidate } = useRouter();
   const queryClient = useQueryClient();
   const loginMutation = useMutation({
-    mutationFn: loginFn,
+    mutationFn: loginUser,
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: GET_AUTHENTICATED_USERS_KEY });
       await invalidate();

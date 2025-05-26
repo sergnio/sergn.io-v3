@@ -14,7 +14,7 @@ import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
-import { COFFEE_ROUTE } from "~/constants/ui-routes";
+import { COFFEE_ROUTE, LOGIN_ROUTE, LOGOUT_ROUTE } from "~/constants/ui-routes";
 import { loggedInUserQueryOptions } from "~/utils/users";
 
 export const Route = createRootRouteWithContext<{
@@ -152,21 +152,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           </Link>
           <div className="ml-auto relative">
             {user ? (
-              <button
-                onClick={() => {
-                  // logout
-                }}
+              <Link
+                to={LOGOUT_ROUTE}
                 className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
               >
                 Log out
-              </button>
+              </Link>
             ) : (
               <button
                 onDoubleClick={() => navigate({ to: "/login" })}
-                aria-hidden
-                className="absolute right-0 top-0 w-[100px] h-[50px] opacity-0"
+                // className="absolute right-0 top-0 w-[100px] h-[50px] opacity-0"
               >
-                Login shortcut
+                Login
               </button>
             )}
           </div>

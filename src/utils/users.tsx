@@ -7,6 +7,7 @@ import {
 } from "~/constants/query-keys";
 import { createServerFn } from "@tanstack/react-start";
 import { getSupabaseServerInstance } from "~/utils/supabase-instance";
+import { redirect } from "@tanstack/react-router";
 
 export type User = {
   id: number;
@@ -39,26 +40,36 @@ export const loggedInUserQueryOptions = () => {
   });
 };
 
-export const usersQueryOptions = () =>
-  queryOptions({
-    queryKey: GET_USERS_KEY,
-    queryFn: () =>
-      axios
-        .get<User[]>(`${DEPLOY_URL}/api/users`)
-        .then((r) => r.data)
-        .catch(() => {
-          throw new Error("Failed to fetch users");
-        }),
+export const loginUser = createServerFn({ method: "POST" })
+  .validator((d: { email: string; password: string }) => d)
+  .handler(async ({ data }) => {
+    const supabase = getSupabaseServerInstance();
+    const { error } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
+
+    if (error) {
+      return {
+        error: true,
+        message: error.message,
+      };
+    }
   });
 
-export const userQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: GET_SINGLE_USER_KEY(id),
-    queryFn: () =>
-      axios
-        .get<User>(`${DEPLOY_URL}/api/users/${id}`)
-        .then((r) => r.data)
-        .catch(() => {
-          throw new Error("Failed to fetch user");
-        }),
+export const logoutUser = createServerFn().handler(async () => {
+  console.log("Logging out user...");
+  const supabase = getSupabaseServerInstance();
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    return {
+      error: true,
+      message: error.message,
+    };
+  }
+
+  throw redirect({
+    href: "/",
   });
+});
