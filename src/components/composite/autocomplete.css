@@ -1,0 +1,51 @@
+.wrapper {
+    position: relative;
+}
+
+.input {
+    width: 100%;
+    padding: 1rem 0.5rem;
+    line-height: 1.5;
+}
+
+.label {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: black;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.input:focus + .label,
+.input:not(:placeholder-shown) + .label {
+    top: -0.5rem;
+    font-size: 0.75rem;
+    transform: none;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.option {
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.focused {
+    background-color: #eee;
+}
