@@ -46,21 +46,18 @@ export const loginUser = createServerFn({ method: "POST" })
     return data as { email: string; password: string };
   })
   .handler(async ({ data }) => {
-    console.log("Logging in user...", data);
     const supabase = getSupabaseServerInstance();
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
     });
-    console.log("error!!!", Boolean(error));
+
     if (error) {
-      console.log("Login error:", error);
       return {
         error: true,
         message: error.message,
       };
     }
-    console.log("User logged in successfully");
   });
 
 export const logoutUser = createServerFn().handler(async () => {
@@ -74,8 +71,4 @@ export const logoutUser = createServerFn().handler(async () => {
       message: error.message,
     };
   }
-
-  throw redirect({
-    href: "/",
-  });
 });
