@@ -2,8 +2,9 @@ import { json } from "@tanstack/react-start";
 import { createAPIFileRoute } from "@tanstack/react-start/api";
 import axios from "redaxios";
 import type { User } from "src/utils/users";
+import { getSupabaseServerInstance } from "~/utils/supabase-instance";
 
-export const APIRoute = createAPIFileRoute("/api/users")({
+export const UsersRoute = createAPIFileRoute("/api/users")({
   GET: async ({ request }) => {
     console.info("Fetching users... @", request.url);
     const res = await axios.get<Array<User>>(
@@ -13,5 +14,21 @@ export const APIRoute = createAPIFileRoute("/api/users")({
     const list = res.data.slice(0, 10);
 
     return json(list.map((u) => ({ id: u.id, name: u.name, email: u.email })));
+  },
+});
+
+export const UsersAuthenticatedRoute = createAPIFileRoute("/api/users")({
+  GET: async () => {
+    const serverInstance = getSupabaseServerInstance();
+    const { data, error } = await serverInstance.auth.getUser();
+
+    if (!data.user?.email || error) {
+      return json(null, { status: 401 });
+    }
+
+    return json({
+      id: data.user.id,
+      email: data.user.email,
+    });
   },
 });

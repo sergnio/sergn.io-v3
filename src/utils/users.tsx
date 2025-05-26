@@ -12,28 +12,26 @@ export type User = {
 
 export const DEPLOY_URL = "http://localhost:3000";
 
-export const fetchLoggedInUser = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const serverInstance = getSupabaseServerInstance();
-    const { data, error: _error } = await serverInstance.auth.getUser();
-
-    if (!data.user?.email || _error) {
-      return null;
-    }
-
-    return {
-      id: data.user.id,
-      email: data.user.email,
-    };
-  },
-);
+export const loggedInUserQueryOptions = () =>
+  queryOptions({
+    queryKey: ["user"],
+    queryFn: () =>
+      axios
+        .get<User | null>(`${DEPLOY_URL}/api/users/me`)
+        .then((r) => r.data)
+        .catch((e) => {
+          console.error(e);
+          return null;
+        }),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
 export const usersQueryOptions = () =>
   queryOptions({
     queryKey: GET_USERS_KEY,
     queryFn: () =>
       axios
-        .get<Array<User>>(DEPLOY_URL + "/api/users")
+        .get<User[]>(`${DEPLOY_URL}/api/users`)
         .then((r) => r.data)
         .catch(() => {
           throw new Error("Failed to fetch users");
@@ -45,7 +43,7 @@ export const userQueryOptions = (id: string) =>
     queryKey: GET_SINGLE_USER_KEY(id),
     queryFn: () =>
       axios
-        .get<User>(DEPLOY_URL + "/api/users/" + id)
+        .get<User>(`${DEPLOY_URL}/api/users/${id}`)
         .then((r) => r.data)
         .catch(() => {
           throw new Error("Failed to fetch user");

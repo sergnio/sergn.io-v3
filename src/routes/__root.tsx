@@ -4,17 +4,18 @@ import {
   Link,
   Outlet,
   Scripts,
+  useRouter,
 } from "@tanstack/react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
-import type { QueryClient } from "@tanstack/react-query";
+import { QueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { COFFEE_ROUTE } from "~/constants/ui-routes";
-import { fetchLoggedInUser } from "~/utils/users";
+import { loggedInUserQueryOptions } from "~/utils/users";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -57,12 +58,8 @@ export const Route = createRootRouteWithContext<{
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
-  beforeLoad: async () => {
-    const user = await fetchLoggedInUser();
-
-    return {
-      user,
-    };
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(loggedInUserQueryOptions());
   },
   errorComponent: (props) => {
     return (
@@ -84,13 +81,18 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const { data: user, error } = useSuspenseQuery(loggedInUserQueryOptions());
+  console.log("error", error);
+
+  const { navigate } = useRouter();
+
   return (
     <html>
       <head>
         <HeadContent />
       </head>
       <body>
-        <div className="p-2 flex gap-2 text-lg">
+        <div className="p-2 flex gap-2 items-center text-lg">
           <Link
             to="/"
             activeProps={{
@@ -149,6 +151,26 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           >
             This Route Does Not Exist
           </Link>
+          <div className="ml-auto relative">
+            {user ? (
+              <button
+                onClick={() => {
+                  // logout
+                }}
+                className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                Log out
+              </button>
+            ) : (
+              <button
+                onDoubleClick={() => navigate({ to: "/login" })}
+                aria-hidden
+                className="absolute right-0 top-0 w-[100px] h-[50px] opacity-0"
+              >
+                Login shortcut
+              </button>
+            )}
+          </div>
         </div>
         <hr />
         {children}
