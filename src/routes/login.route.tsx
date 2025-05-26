@@ -3,6 +3,7 @@ import { FormEvent } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GET_AUTHENTICATED_USERS_KEY } from "~/constants/query-keys";
 import { loginUser } from "~/utils/users";
+import { ErrorAlert } from "~/components/ErrorAlert";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -18,7 +19,7 @@ interface Props {
 export function LoginComponent({ error }: Props) {
   const { navigate, invalidate } = useRouter();
   const queryClient = useQueryClient();
-  const loginMutation = useMutation({
+  const { mutate, error: mutationError } = useMutation({
     mutationFn: loginUser,
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: GET_AUTHENTICATED_USERS_KEY });
@@ -34,7 +35,8 @@ export function LoginComponent({ error }: Props) {
     const email = form.get("email") as string;
     const password = form.get("password") as string;
 
-    loginMutation.mutate({ data: { email, password } });
+    console.log("Logging in with:", { email, password });
+    mutate({ data: { email, password } });
   };
 
   return (
@@ -43,15 +45,15 @@ export function LoginComponent({ error }: Props) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
-            htmlFor="username"
+            htmlFor="email"
             className="block text-sm font-medium text-gray-700"
           >
-            Username
+            Email
           </label>
           <input
             type="text"
-            id="username"
-            name="username"
+            id="email"
+            name="email"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
             required
           />
@@ -78,14 +80,8 @@ export function LoginComponent({ error }: Props) {
           Sign in
         </button>
       </form>
-      {error && (
-        <div
-          role="alert"
-          className="mt-4 rounded-md bg-red-100 border border-red-300 text-red-800 px-4 py-3"
-        >
-          {error}
-        </div>
-      )}
+      {error && <ErrorAlert message={error} />}
+      {mutationError && <ErrorAlert message={mutationError.message} />}
     </div>
   );
 }

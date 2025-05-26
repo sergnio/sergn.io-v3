@@ -39,7 +39,12 @@ export const loggedInUserQueryOptions = () => {
 };
 
 export const loginUser = createServerFn({ method: "POST" })
-  .validator((d: { email: string; password: string }) => d)
+  .validator((data: { email: unknown; password: unknown }) => {
+    if (!data.email || !data.password) {
+      throw new Error("Email and password are required fields");
+    }
+    return data as { email: string; password: string };
+  })
   .handler(async ({ data }) => {
     console.log("Logging in user...", data);
     const supabase = getSupabaseServerInstance();
