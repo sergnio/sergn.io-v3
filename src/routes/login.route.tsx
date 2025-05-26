@@ -2,19 +2,26 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FormEvent } from "react";
 import { ErrorAlert } from "~/components/ErrorAlert";
 import useLoginMutation from "~/hooks/mutations/useLoginMutation";
+import { z } from "zod";
+
+const loginSearchParamsSchema = z.object({
+  error: z.string().optional(),
+});
+
+type LoginSearchParams = z.infer<typeof loginSearchParamsSchema>;
 
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [{ title: "Login" }],
   }),
   component: LoginComponent,
+  validateSearch: (search) => loginSearchParamsSchema.parse(search ?? {}),
 });
 
-interface Props {
-  error?: string;
-}
+export function LoginComponent() {
+  const search = Route.useSearch();
+  const error = search.error;
 
-export function LoginComponent({ error }: Props) {
   const { mutate, error: mutationError, isPending } = useLoginMutation();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

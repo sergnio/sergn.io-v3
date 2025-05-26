@@ -1,17 +1,14 @@
-import { LoginComponent } from "~/routes/login.route";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authRoute")({
   beforeLoad: ({ context }) => {
     if (!context.user) {
-      throw new Error("Not authenticated");
+      throw redirect({
+        to: "/login",
+        search: {
+          error: "You must be logged in to access that page",
+        },
+      });
     }
-  },
-  errorComponent: ({ error }) => {
-    if (error.message === "Not authenticated") {
-      return <LoginComponent error={error.message} />;
-    }
-
-    throw error;
   },
 });
