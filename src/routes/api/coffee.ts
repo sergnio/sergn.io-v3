@@ -6,6 +6,7 @@ export const APIRoute = createAPIFileRoute("/api/coffee")({
   GET: async ({ request }) => {
     console.info(`Fetching all coffee... @`, request.url);
     try {
+      console.log("des this work");
       const serverInstance = getSupabaseServerInstance();
       const table = serverInstance.from("coffee");
       const { data } = await table.select(`

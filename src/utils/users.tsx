@@ -1,8 +1,10 @@
 import { queryOptions } from "@tanstack/react-query";
 import axios from "redaxios";
-import { GET_SINGLE_USER_KEY, GET_USERS_KEY } from "~/constants/query-keys";
-import { getSupabaseServerInstance } from "~/utils/supabase-instance";
-import { createServerFn } from "@tanstack/react-start";
+import {
+  GET_AUTHENTICATED_USERS_KEY,
+  GET_SINGLE_USER_KEY,
+  GET_USERS_KEY,
+} from "~/constants/query-keys";
 
 export type User = {
   id: number;
@@ -14,13 +16,31 @@ export const DEPLOY_URL = "http://localhost:3000";
 
 export const loggedInUserQueryOptions = () =>
   queryOptions({
-    queryKey: ["user"],
+    queryKey: GET_AUTHENTICATED_USERS_KEY,
     queryFn: () =>
       axios
         .get<User | null>(`${DEPLOY_URL}/api/users/authenticated`)
-        .then((r) => r.data)
+        .then((r) => {
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          console.log("doing the api call");
+          return r.data;
+        })
         .catch((e) => {
-          console.error(e);
+          console.log("NOT FOUND");
           return null;
         }),
     staleTime: 5 * 60 * 1000, // 5 minutes

@@ -81,7 +81,7 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const { data: user, error } = useSuspenseQuery(loggedInUserQueryOptions());
+  const { data: user } = useSuspenseQuery(loggedInUserQueryOptions());
 
   const { navigate } = useRouter();
 

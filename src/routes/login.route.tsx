@@ -1,7 +1,8 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { FormEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { loginFn } from "~/utils/login";
+import { GET_AUTHENTICATED_USERS_KEY } from "~/constants/query-keys";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -15,9 +16,11 @@ interface Props {
 }
 export function LoginComponent({ error }: Props) {
   const { navigate, invalidate } = useRouter();
+  const queryClient = useQueryClient();
   const loginMutation = useMutation({
     mutationFn: loginFn,
     onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: GET_AUTHENTICATED_USERS_KEY });
       await invalidate();
       navigate({ to: "/" });
       return;
