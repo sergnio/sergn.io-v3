@@ -8,7 +8,10 @@ export const Route = createFileRoute("/login")({
   component: LoginComponent,
 });
 
-export function LoginComponent() {
+interface Props {
+  error?: string;
+}
+export function LoginComponent({ error }: Props) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
@@ -58,6 +61,14 @@ export function LoginComponent() {
           Sign in
         </button>
       </form>
+      {error && (
+        <div
+          role="alert"
+          className="mt-4 rounded-md bg-red-100 border border-red-300 text-red-800 px-4 py-3"
+        >
+          {error}
+        </div>
+      )}
     </div>
   );
 }

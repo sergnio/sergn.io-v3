@@ -14,6 +14,7 @@ import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { COFFEE_ROUTE } from "~/constants/ui-routes";
+import { fetchLoggedInUser } from "~/utils/users";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -57,7 +58,7 @@ export const Route = createRootRouteWithContext<{
     ],
   }),
   beforeLoad: async () => {
-    const user = await fetchUser();
+    const user = await fetchLoggedInUser();
 
     return {
       user,

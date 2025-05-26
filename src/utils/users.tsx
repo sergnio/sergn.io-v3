@@ -1,6 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 import axios from "redaxios";
 import { GET_SINGLE_USER_KEY, GET_USERS_KEY } from "~/constants/query-keys";
+import { getSupabaseServerInstance } from "~/utils/supabase-instance";
+import { createServerFn } from "@tanstack/react-start";
 
 export type User = {
   id: number;
@@ -9,6 +11,22 @@ export type User = {
 };
 
 export const DEPLOY_URL = "http://localhost:3000";
+
+export const fetchLoggedInUser = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const serverInstance = getSupabaseServerInstance();
+    const { data, error: _error } = await serverInstance.auth.getUser();
+
+    if (!data.user?.email || _error) {
+      return null;
+    }
+
+    return {
+      id: data.user.id,
+      email: data.user.email,
+    };
+  },
+);
 
 export const usersQueryOptions = () =>
   queryOptions({
