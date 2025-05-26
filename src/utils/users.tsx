@@ -17,7 +17,7 @@ export const loggedInUserQueryOptions = () =>
     queryKey: ["user"],
     queryFn: () =>
       axios
-        .get<User | null>(`${DEPLOY_URL}/api/users/me`)
+        .get<User | null>(`${DEPLOY_URL}/api/users/authenticated`)
         .then((r) => r.data)
         .catch((e) => {
           console.error(e);
