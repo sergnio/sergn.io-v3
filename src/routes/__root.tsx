@@ -159,12 +159,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 Log out
               </Link>
             ) : (
-              <button
-                onDoubleClick={() => navigate({ to: "/login" })}
-                // className="absolute right-0 top-0 w-[100px] h-[50px] opacity-0"
+              <Link
+                to={LOGIN_ROUTE}
+                aria-hidden
+                className="absolute right-0 top-0 w-[100px] h-[50px] opacity-0"
               >
-                Login
-              </button>
+                Log in
+              </Link>
             )}
           </div>
         </div>

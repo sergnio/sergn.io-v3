@@ -14,6 +14,7 @@ export const Route = createFileRoute("/login")({
 interface Props {
   error?: string;
 }
+
 export function LoginComponent({ error }: Props) {
   const { navigate, invalidate } = useRouter();
   const queryClient = useQueryClient();
