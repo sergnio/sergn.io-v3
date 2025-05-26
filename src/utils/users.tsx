@@ -14,37 +14,21 @@ export type User = {
 
 export const DEPLOY_URL = "http://localhost:3000";
 
-export const loggedInUserQueryOptions = () =>
-  queryOptions({
+export const loggedInUserQueryOptions = () => {
+  return queryOptions({
     queryKey: GET_AUTHENTICATED_USERS_KEY,
-    queryFn: () =>
-      axios
+    queryFn: () => {
+      return axios
         .get<User | null>(`${DEPLOY_URL}/api/users/authenticated`)
-        .then((r) => {
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          console.log("doing the api call");
-          return r.data;
-        })
+        .then((r) => r.data)
         .catch((e) => {
           console.log("NOT FOUND");
           return null;
-        }),
+        });
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+};
 
 export const usersQueryOptions = () =>
   queryOptions({

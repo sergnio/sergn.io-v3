@@ -1,28 +1,24 @@
+import { json } from "@tanstack/react-start";
 import { createAPIFileRoute } from "@tanstack/react-start/api";
 import { getSupabaseServerInstance } from "~/utils/supabase-instance";
-import { json } from "@tanstack/react-start";
 
-export const GetAuthenticatedUserRoute = createAPIFileRoute(
-  "/api/users/authenticated",
-)({
-  GET: async () => {
-    console.log("trying");
+export const APIRoute = createAPIFileRoute("/api/users/authenticated")({
+  GET: async ({ request }) => {
+    console.info(`Fetching authenticated user... @`, request.url);
     try {
-      console.log("god damnit");
-      const serverInstance = getSupabaseServerInstance();
-      console.log("help");
-      const { data, error } = await serverInstance.auth.getUser();
-      if (!data.user?.email || error) {
-        return json(null, { status: 401 });
+      const supabase = getSupabaseServerInstance();
+      const { data, error: _error } = await supabase.auth.getUser();
+
+      if (!data.user?.email || _error) {
+        return json({ error: "No authenticated user found" }, { status: 404 });
       }
 
       return json({
-        id: data.user.id,
         email: data.user.email,
       });
     } catch (e) {
-      console.error("Error fetching authenticated user:", e);
-      return json({ error: "Internal Server Error" }, { status: 500 });
+      console.error(e);
+      return json({ error: "Something went wrong!" }, { status: 500 });
     }
   },
 });
