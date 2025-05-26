@@ -5,6 +5,8 @@ import {
   GET_SINGLE_USER_KEY,
   GET_USERS_KEY,
 } from "~/constants/query-keys";
+import { createServerFn } from "@tanstack/react-start";
+import { getSupabaseServerInstance } from "~/utils/supabase-instance";
 
 export type User = {
   id: number;
@@ -14,18 +16,25 @@ export type User = {
 
 export const DEPLOY_URL = "http://localhost:3000";
 
+const fetchAuthenticatedUser = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const supabase = getSupabaseServerInstance();
+    const { data, error: _error } = await supabase.auth.getUser();
+
+    if (!data.user?.email || _error) {
+      return null;
+    }
+
+    return {
+      email: data.user.email,
+    };
+  },
+);
+
 export const loggedInUserQueryOptions = () => {
   return queryOptions({
     queryKey: GET_AUTHENTICATED_USERS_KEY,
-    queryFn: () => {
-      return axios
-        .get<User | null>(`${DEPLOY_URL}/api/users/authenticated`)
-        .then((r) => r.data)
-        .catch((e) => {
-          console.log("NOT FOUND");
-          return null;
-        });
-    },
+    queryFn: fetchAuthenticatedUser,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
