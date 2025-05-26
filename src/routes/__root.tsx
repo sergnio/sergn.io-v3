@@ -58,8 +58,13 @@ export const Route = createRootRouteWithContext<{
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(loggedInUserQueryOptions());
+  beforeLoad: async ({ context }) => {
+    const user = await context.queryClient.ensureQueryData(
+      loggedInUserQueryOptions(),
+    );
+    return {
+      user,
+    };
   },
   errorComponent: (props) => {
     return (
@@ -82,8 +87,6 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const { data: user } = useSuspenseQuery(loggedInUserQueryOptions());
-
-  const { navigate } = useRouter();
 
   return (
     <html>
