@@ -69,7 +69,6 @@ function AddCoffee() {
           <Radio value="g">Grams</Radio>
           <Radio value="oz">Oz</Radio>
         </RadioGroup>
-        <FileUploader />
         <Dropdown
           label="Grinder"
           options={grinderModels.map((model) => ({
@@ -77,6 +76,7 @@ function AddCoffee() {
             name: model.type,
           }))}
         />
+        <FileUploader />
         <Button type="submit">Add Coffee</Button>
       </Form>
     </div>
