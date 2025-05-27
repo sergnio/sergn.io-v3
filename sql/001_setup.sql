@@ -16,9 +16,9 @@ create table bag_size (
 create table coffee (
     id uuid primary key default gen_random_uuid(),
     name text not null,
-    bought_from text,
-    price numeric,
-    bag_size_id uuid references bag_size(id),
+    bought_from text not null,
+    price numeric not null,
+    bag_size_id uuid references bag_size(id) not null,
     image text
 );
 
@@ -34,7 +34,7 @@ create table grinder_settings (
      grinder_model_id uuid references grinder_settings_model(id) not null,
      number integer,
      rotations integer,
-     setting integer,
+     setting integer
      constraint grinder_settings_field_check check (
        (number is not null and rotations is not null and setting is null) or
        (number is null and rotations is null and setting is not null)
