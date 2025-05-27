@@ -19,6 +19,7 @@ import { fetchBrewMethodsQueryOptions } from "~/utils/brewMethod";
 import { useQuery } from "@tanstack/react-query";
 import { Dropdown } from "~/components/atomic/Dropdown";
 import { useGrinderModels } from "~/hooks/queries/useGrinderModels";
+import { NumberInput } from "~/components/atomic/NumberInput";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -60,15 +61,8 @@ function AddCoffee() {
           label={"Bought From"}
           options={["SK Coffee", "Avo Coffee Roasters"]}
         />
-        <NumberField name="price" defaultValue={0} isRequired>
-          <Label>Price ($)</Label>
-          <Group>
-            <Button slot="decrement">-</Button>
-            <Input />
-            <Button slot="increment">+</Button>
-          </Group>
-          <FieldError />
-        </NumberField>
+        <NumberInput label={"Price ($)"} incrementDecrementButtons />
+        <NumberInput label={"Size of bag"} />
         <RadioGroup name="unit" defaultValue="g" isRequired>
           <Label>Unit of measurement</Label>
           <span>(always shown in grams)</span>
