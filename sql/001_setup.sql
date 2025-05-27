@@ -19,7 +19,7 @@ create table coffee (
     bought_from text not null,
     price numeric not null,
     bag_size_id uuid references bag_size(id) not null,
-    image text
+    image_url text
 );
 
 -- Grinder_settings model table (shared metadata)
