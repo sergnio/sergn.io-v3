@@ -1,17 +1,8 @@
-import type { ListBoxItemProps } from "react-aria-components";
-import {
-  Autocomplete,
-  Button,
-  Label,
-  ListBox,
-  ListBoxItem,
-  Popover,
-  Select,
-  SelectValue,
-  useFilter,
-} from "react-aria-components";
-
+import { PropsWithChildren, RefObject, useState } from "react";
+import * as Select from "@radix-ui/react-select";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { camelize } from "~/utils/transformers";
+import { Button, DropdownMenu } from "@radix-ui/themes";
 
 export interface Option {
   id: string;
@@ -21,38 +12,49 @@ export interface Option {
 interface DropdownProps {
   label: string;
   options: Option[];
+  onSelect: (value: string) => void;
+  selectedValue: string;
 }
 
-export const Dropdown = ({ label, options }: DropdownProps) => {
-  let { contains } = useFilter({ sensitivity: "base" });
-
+export const Dropdown = ({
+  label,
+  options,
+  onSelect,
+  selectedValue,
+}: DropdownProps) => {
   return (
-    <Select name={camelize(label)}>
-      <Label>{label}</Label>
-      <Button>
-        <SelectValue />
-        <span aria-hidden="true">▼</span>
-      </Button>
-      <Popover>
-        <Autocomplete filter={contains}>
-          <ListBox items={options}>
-            {(item) => <SelectItem>{item.name}</SelectItem>}
-          </ListBox>
-        </Autocomplete>
-      </Popover>
-    </Select>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button variant="soft">
+          Options
+          <DropdownMenu.TriggerIcon />
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item shortcut="⌘ E">Edit</DropdownMenu.Item>
+        <DropdownMenu.Item shortcut="⌘ D">Duplicate</DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item shortcut="⌘ N">Archive</DropdownMenu.Item>
+
+        <DropdownMenu.Sub>
+          <DropdownMenu.SubTrigger>More</DropdownMenu.SubTrigger>
+          <DropdownMenu.SubContent>
+            <DropdownMenu.Item>Move to project…</DropdownMenu.Item>
+            <DropdownMenu.Item>Move to folder…</DropdownMenu.Item>
+
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item>Advanced options…</DropdownMenu.Item>
+          </DropdownMenu.SubContent>
+        </DropdownMenu.Sub>
+
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item>Share</DropdownMenu.Item>
+        <DropdownMenu.Item>Add to favorites</DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item shortcut="⌘ ⌫" color="red">
+          Delete
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 };
-
-function SelectItem(props: ListBoxItemProps & { children: string }) {
-  return (
-    <ListBoxItem {...props} textValue={props.children}>
-      {({ isSelected }) => (
-        <>
-          <span>{props.children}</span>
-          {isSelected && <>checked</>}
-        </>
-      )}
-    </ListBoxItem>
-  );
-}
