@@ -12,6 +12,7 @@ import { QueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
+import autocompleteCss from "~/components/composite/autocomplete.css?url";
 import { seo } from "~/utils/seo";
 import { COFFEE_ROUTE, LOGIN_ROUTE, LOGOUT_ROUTE } from "~/constants/ui-routes";
 import { loggedInUserQueryOptions } from "~/utils/users";
@@ -35,6 +36,7 @@ export const Route = createRootRouteWithContext<{
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "stylesheet", href: autocompleteCss },
       {
         rel: "apple-touch-icon",
         sizes: "180x180",

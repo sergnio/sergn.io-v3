@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
 } from "react";
-import "./Autocomplete.css";
 import { useOutsideClick } from "~/hooks/utilities/useOutsideClick";
 import { camelize } from "~/utils/transformers";
 import { Option } from "~/components/atomic/Dropdown";
