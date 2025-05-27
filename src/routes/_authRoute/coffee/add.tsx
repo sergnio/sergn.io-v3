@@ -1,14 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Button,
+  Checkbox,
   FieldError,
   Form,
+  Group,
   Input,
   Label,
+  NumberField,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   useFilter,
 } from "react-aria-components";
 import { Autocomplete } from "~/components/composite/autocomplete";
+import { FormEvent } from "react";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -17,10 +23,13 @@ export const Route = createFileRoute("/_authRoute/coffee/add")({
 function AddCoffee() {
   const { contains } = useFilter({ sensitivity: "base" });
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     // Handle form submission logic here
-    console.log("Coffee added!");
+    const form = new FormData(e.currentTarget);
+    const data = Object.fromEntries(form.entries());
+
+    console.log("Submitted", data);
   };
 
   return (
@@ -39,6 +48,19 @@ function AddCoffee() {
           label={"Bought From"}
           options={["SK Coffee", "Avo Coffee Roasters"]}
         />
+        <NumberField name="price" defaultValue={0} isRequired>
+          <Label>Price ($)</Label>
+          <Group>
+            <Button slot="decrement">-</Button>
+            <Input />
+            <Button slot="increment">+</Button>
+          </Group>
+          <FieldError />
+        </NumberField>
+        <ToggleButtonGroup>
+          <ToggleButton id="grams">Grams</ToggleButton>
+          <ToggleButton id="oz">Oz</ToggleButton>
+        </ToggleButtonGroup>
         <Button type="submit">Add Coffee</Button>
       </Form>
     </div>
