@@ -3,7 +3,7 @@ import {
   GET_AUTHENTICATED_USERS_KEY,
   GET_BREW_METHODS_KEY,
 } from "~/constants/query-keys";
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, json } from "@tanstack/react-start";
 import { getSupabaseServerInstance } from "~/utils/supabase-instance";
 
 export type User = {
@@ -14,17 +14,12 @@ export type User = {
 
 const fetchBrewMethods = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = getSupabaseServerInstance();
-  const results = await supabase.from("brew_method").select(`*`);
+  const { data } = await supabase.from("brew_method").select(`*`);
 
-  return {
-    user: {
-      id: data.user.id,
-      email: data.user.email,
-    },
-  };
+  return data;
 });
 
-export const loggedInUserQueryOptions = () =>
+export const fetchBrewMethodsQueryOptions = () =>
   queryOptions({
     queryKey: GET_BREW_METHODS_KEY,
     queryFn: fetchBrewMethods,

@@ -3,7 +3,7 @@
 This site is built with TanStack Router
 
 - [TanStack Router Docs](https://tanstack.com/router)
-- 
+
 It's deployed automagically with Netlify
 
 - [Netlify](https://netlify.com/)
@@ -19,3 +19,7 @@ pnpm dev
 
 This starts your app in development mode, rebuilding assets on file changes.
 
+## Generating Types
+```
+npx supabase gen types typescript --project-id "fokbmwfesltttmdwexnl" --schema public > database.types.ts
+```

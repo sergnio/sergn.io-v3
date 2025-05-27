@@ -18,13 +18,21 @@ import {
 import { Autocomplete } from "~/components/composite/autocomplete";
 import { FormEvent } from "react";
 import { FileUploader } from "~/components/atomic/FileUploader";
+import { fetchBrewMethodsQueryOptions } from "~/utils/brewMethod";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
+  loader: ({ context: { queryClient } }) => {
+    queryClient.prefetchQuery(fetchBrewMethodsQueryOptions());
+  },
 });
 
 function AddCoffee() {
   const { contains } = useFilter({ sensitivity: "base" });
+
+  const { data } = useQuery(fetchBrewMethodsQueryOptions());
+  console.log("Brew Methods:", data);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
