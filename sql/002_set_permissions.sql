@@ -70,3 +70,34 @@ to authenticated
 using (auth.uid() = 'b0e93ea4-a886-45ef-8431-192c86afa140')
 with check (auth.uid() = 'b0e93ea4-a886-45ef-8431-192c86afa140');
 
+       -- Grinder model table
+alter table grinder_model enable row level security;
+
+create policy "Public read access"
+on grinder_model
+for select
+               to public
+               using (true);
+
+create policy "Admin-only write access"
+on grinder_model
+for all
+  to authenticated
+  using (auth.uid() = 'b0e93ea4-a886-45ef-8431-192c86afa140')
+  with check (auth.uid() = 'b0e93ea4-a886-45ef-8431-192c86afa140');
+
+       -- Coffee brew method bridge table
+alter table coffee_brew_method enable row level security;
+
+create policy "Public read access"
+on coffee_brew_method
+for select
+               to public
+               using (true);
+
+create policy "Admin-only write access"
+on coffee_brew_method
+for all
+  to authenticated
+  using (auth.uid() = 'b0e93ea4-a886-45ef-8431-192c86afa140')
+  with check (auth.uid() = 'b0e93ea4-a886-45ef-8431-192c86afa140');
