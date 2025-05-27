@@ -9,16 +9,17 @@ import {
 import "./Autocomplete.css";
 import { useOutsideClick } from "~/hooks/utilities/useOutsideClick";
 import { camelize } from "~/utils/transformers";
+import { Option } from "~/components/atomic/Dropdown";
 
 interface Props
   extends Omit<
     InputHTMLAttributes<HTMLInputElement>,
     "placeholder" | "onChange" | "id" | "name"
   > {
-  options: string[];
-  defaultValue?: string;
+  options: Option[];
+  defaultValue?: Option;
   label: string;
-  onConfirm?: (selectedValue: string) => void;
+  onConfirm?: (selectedValue: Option) => void;
   onChange?: (newValue: string) => void;
   passthroughStyles?: {
     input?: string;
@@ -40,8 +41,8 @@ export const Autocomplete = ({
   ...rest
 }: Props) => {
   const camelizedLabel = camelize(label);
-  const [value, setValue] = useState<string>(defaultValue ?? EMPTY);
-  const [filtered, setFiltered] = useState<string[]>([]);
+  const [value, setValue] = useState<string>(defaultValue?.name ?? EMPTY);
+  const [filtered, setFiltered] = useState<Option[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -53,15 +54,15 @@ export const Autocomplete = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen) return;
 
-    if (e.key === "Tab" && e.shiftKey) {
-      e.preventDefault();
-      setActiveIndex((i) => (i - 1 + filtered.length) % filtered.length);
-      return;
-    }
-
     switch (e.key) {
-      case "ArrowDown":
       case "Tab":
+        if (e.shiftKey) {
+          e.preventDefault();
+          setActiveIndex((i) => (i - 1 + filtered.length) % filtered.length);
+          return;
+        }
+      // fallthrough for regular tab
+      case "ArrowDown":
         e.preventDefault();
         setActiveIndex((i) => (i + 1) % filtered.length);
         break;
@@ -73,7 +74,7 @@ export const Autocomplete = ({
         e.preventDefault();
         if (activeIndex >= 0) {
           const selected = filtered[activeIndex];
-          setValue(selected);
+          setValue(selected.name);
           onConfirm?.(selected);
           setIsOpen(false);
         }
@@ -85,8 +86,8 @@ export const Autocomplete = ({
     }
   };
 
-  const handleOptionClick = (option: string) => {
-    setValue(option);
+  const handleOptionClick = (option: Option) => {
+    setValue(option.name);
     onConfirm?.(option);
     setIsOpen(false);
   };
@@ -115,7 +116,7 @@ export const Autocomplete = ({
       setIsOpen(false);
     } else {
       const newFiltered = options.filter((option) =>
-        option.toLowerCase().includes(newValue.toLowerCase()),
+        option.name.toLowerCase().includes(newValue.toLowerCase()),
       );
       setFiltered(newFiltered);
       setIsOpen(newFiltered.length > 0);
@@ -146,7 +147,7 @@ export const Autocomplete = ({
       />
       {label && (
         <label
-          htmlFor="autocomplete-input"
+          htmlFor={camelizedLabel}
           className={clsx("label", passthroughStyles?.label)}
         >
           {label}
@@ -161,7 +162,7 @@ export const Autocomplete = ({
         >
           {filtered.map((option, index) => (
             <li
-              key={option}
+              key={option.id}
               role="option"
               aria-selected={index === activeIndex}
               className={clsx("option", { focused: index === activeIndex })}
@@ -169,7 +170,7 @@ export const Autocomplete = ({
               onMouseEnter={() => setActiveIndex(index)}
               tabIndex={0}
             >
-              {option}
+              {option.name}
             </li>
           ))}
         </ul>

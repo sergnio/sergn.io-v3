@@ -20,6 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Dropdown } from "~/components/atomic/Dropdown";
 import { useGrinderModels } from "~/hooks/queries/useGrinderModels";
 import { NumberInput } from "~/components/atomic/NumberInput";
+import { useBagSizes } from "~/hooks/queries/useBagSizes";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -33,8 +34,10 @@ function AddCoffee() {
 
   const { data: brewMethods } = useQuery(fetchBrewMethodsQueryOptions());
   const { grinderModels } = useGrinderModels();
+  const { bagSizes } = useBagSizes();
   console.log("Brew Methods:", brewMethods);
   console.log("Grinder Models:", grinderModels);
+  console.log("Bag Sizes:", bagSizes);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,13 +59,19 @@ function AddCoffee() {
           <Input required />
           <FieldError />
         </TextField>
-        <Autocomplete
-          required
-          label={"Bought From"}
-          options={["SK Coffee", "Avo Coffee Roasters"]}
-        />
+        <TextField name="roaster" type="text" isRequired>
+          <Label>Roaster</Label>
+          <Input required />
+          <FieldError />
+        </TextField>
         <NumberInput label={"Price ($)"} incrementDecrementButtons />
-        <NumberInput label={"Size of bag"} />
+        <Autocomplete
+          label={"Size of bag"}
+          options={bagSizes.map((size) => ({
+            id: size.id,
+            name: size.g != null ? `${size.g}g` : `${size.oz}oz`,
+          }))}
+        />
         <RadioGroup name="unit" defaultValue="g" isRequired>
           <Label>Unit of measurement</Label>
           <span>(always shown in grams)</span>
