@@ -8,6 +8,8 @@ import {
   Input,
   Label,
   NumberField,
+  Radio,
+  RadioGroup,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -57,10 +59,11 @@ function AddCoffee() {
           </Group>
           <FieldError />
         </NumberField>
-        <ToggleButtonGroup>
-          <ToggleButton id="grams">Grams</ToggleButton>
-          <ToggleButton id="oz">Oz</ToggleButton>
-        </ToggleButtonGroup>
+        <RadioGroup name="unit" defaultValue="g" isRequired>
+          <Label>Unit of measurement</Label>
+          <Radio value="g">Grams</Radio>
+          <Radio value="oz">Oz</Radio>
+        </RadioGroup>
         <Button type="submit">Add Coffee</Button>
       </Form>
     </div>
