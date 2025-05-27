@@ -1,11 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Autocomplete } from "~/components/composite/autocomplete";
+import {
+  Autocomplete,
+  Button,
+  Input,
+  Label,
+  Menu,
+  MenuItem,
+  SearchField,
+  useFilter,
+} from "react-aria-components";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
 });
 
 function AddCoffee() {
+  const { contains } = useFilter({ sensitivity: "base" });
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // Handle form submission logic here
@@ -23,13 +34,20 @@ function AddCoffee() {
           <input type="text" id="coffeeName" name="coffeeName" required />
         </div>
         <div>
-          <Autocomplete
-            required
-            label={"Bought From"}
-            options={["SK Coffee", "Avo Coffee Roasters"]}
-          />
+          <Autocomplete filter={contains}>
+            <SearchField>
+              <Label>Commands</Label>
+              <Input placeholder="Search commands...." />
+              <Button>✕</Button>
+            </SearchField>
+            <Menu>
+              <MenuItem>Avo Roasters</MenuItem>
+              <MenuItem>SK Coffee</MenuItem>
+              <MenuItem>La Tulipa </MenuItem>
+            </Menu>
+          </Autocomplete>
         </div>
-        <button type="submit">Add Coffee</button>
+        <Button type="submit">Add Coffee</Button>
       </form>
     </div>
   );
