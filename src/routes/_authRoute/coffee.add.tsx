@@ -1,14 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Autocomplete,
-  Button,
-  Input,
-  Label,
-  Menu,
-  MenuItem,
-  SearchField,
-  useFilter,
-} from "react-aria-components";
+import { useFilter } from "react-aria-components";
+import { Autocomplete } from "~/components/composite/autocomplete";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -34,20 +26,13 @@ function AddCoffee() {
           <input type="text" id="coffeeName" name="coffeeName" required />
         </div>
         <div>
-          <Autocomplete filter={contains}>
-            <SearchField>
-              <Label>Commands</Label>
-              <Input placeholder="Search commands...." />
-              <Button>✕</Button>
-            </SearchField>
-            <Menu>
-              <MenuItem>Avo Roasters</MenuItem>
-              <MenuItem>SK Coffee</MenuItem>
-              <MenuItem>La Tulipa </MenuItem>
-            </Menu>
-          </Autocomplete>
+          <Autocomplete
+            required
+            label={"Bought From"}
+            options={["SK Coffee", "Avo Coffee Roasters"]}
+          />
         </div>
-        <Button type="submit">Add Coffee</Button>
+        <button type="submit">Add Coffee</button>
       </form>
     </div>
   );
