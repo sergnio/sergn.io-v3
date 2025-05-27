@@ -29,64 +29,43 @@ export type Database = {
       }
       brew_method: {
         Row: {
-          coffee_id: string | null
-          grinder_id: string | null
           id: string
           name: Database["public"]["Enums"]["brew_method_name"]
         }
         Insert: {
-          coffee_id?: string | null
-          grinder_id?: string | null
           id?: string
           name: Database["public"]["Enums"]["brew_method_name"]
         }
         Update: {
-          coffee_id?: string | null
-          grinder_id?: string | null
           id?: string
           name?: Database["public"]["Enums"]["brew_method_name"]
         }
-        Relationships: [
-          {
-            foreignKeyName: "brew_method_coffee_id_fkey"
-            columns: ["coffee_id"]
-            isOneToOne: false
-            referencedRelation: "coffee"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "brew_method_grinder_id_fkey"
-            columns: ["grinder_id"]
-            isOneToOne: false
-            referencedRelation: "grinder"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       coffee: {
         Row: {
-          bag_size_id: string | null
-          bought_from: string | null
+          bag_size_id: string
+          bought_from: string
           id: string
           image_url: string | null
           name: string
-          price: number | null
+          price: number
         }
         Insert: {
-          bag_size_id?: string | null
-          bought_from?: string | null
+          bag_size_id: string
+          bought_from: string
           id?: string
           image_url?: string | null
           name: string
-          price?: number | null
+          price: number
         }
         Update: {
-          bag_size_id?: string | null
-          bought_from?: string | null
+          bag_size_id?: string
+          bought_from?: string
           id?: string
           image_url?: string | null
           name?: string
-          price?: number | null
+          price?: number
         }
         Relationships: [
           {
@@ -98,29 +77,92 @@ export type Database = {
           },
         ]
       }
-      grinder: {
+      coffee_brew_method: {
+        Row: {
+          brew_method_id: string
+          coffee_id: string
+          grinder_settings_id: string
+        }
+        Insert: {
+          brew_method_id: string
+          coffee_id: string
+          grinder_settings_id: string
+        }
+        Update: {
+          brew_method_id?: string
+          coffee_id?: string
+          grinder_settings_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coffee_brew_method_brew_method_id_fkey"
+            columns: ["brew_method_id"]
+            isOneToOne: false
+            referencedRelation: "brew_method"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coffee_brew_method_coffee_id_fkey"
+            columns: ["coffee_id"]
+            isOneToOne: false
+            referencedRelation: "coffee"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coffee_brew_method_grinder_settings_id_fkey"
+            columns: ["grinder_settings_id"]
+            isOneToOne: false
+            referencedRelation: "grinder_settings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grinder_model: {
         Row: {
           id: string
-          number: number | null
-          rotations: number | null
-          setting: number | null
           type: Database["public"]["Enums"]["grinder_type"]
         }
         Insert: {
           id?: string
-          number?: number | null
-          rotations?: number | null
-          setting?: number | null
           type: Database["public"]["Enums"]["grinder_type"]
         }
         Update: {
           id?: string
-          number?: number | null
-          rotations?: number | null
-          setting?: number | null
           type?: Database["public"]["Enums"]["grinder_type"]
         }
         Relationships: []
+      }
+      grinder_settings: {
+        Row: {
+          grinder_model_id: string
+          id: string
+          number: number | null
+          rotations: number | null
+          setting: number | null
+        }
+        Insert: {
+          grinder_model_id: string
+          id?: string
+          number?: number | null
+          rotations?: number | null
+          setting?: number | null
+        }
+        Update: {
+          grinder_model_id?: string
+          id?: string
+          number?: number | null
+          rotations?: number | null
+          setting?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grinder_grinder_model_id_fkey"
+            columns: ["grinder_model_id"]
+            isOneToOne: false
+            referencedRelation: "grinder_model"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
