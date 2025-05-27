@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Button,
-  Checkbox,
   FieldError,
   Form,
   Group,
@@ -11,8 +10,6 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  ToggleButton,
-  ToggleButtonGroup,
   useFilter,
 } from "react-aria-components";
 import { Autocomplete } from "~/components/composite/autocomplete";
@@ -20,6 +17,8 @@ import { FormEvent } from "react";
 import { FileUploader } from "~/components/atomic/FileUploader";
 import { fetchBrewMethodsQueryOptions } from "~/utils/brewMethod";
 import { useQuery } from "@tanstack/react-query";
+import { Dropdown } from "~/components/atomic/Dropdown";
+import { useGrinderModels } from "~/hooks/queries/useGrinderModels";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -31,8 +30,10 @@ export const Route = createFileRoute("/_authRoute/coffee/add")({
 function AddCoffee() {
   const { contains } = useFilter({ sensitivity: "base" });
 
-  const { data } = useQuery(fetchBrewMethodsQueryOptions());
-  console.log("Brew Methods:", data);
+  const { data: brewMethods } = useQuery(fetchBrewMethodsQueryOptions());
+  const { grinderModels } = useGrinderModels();
+  console.log("Brew Methods:", brewMethods);
+  console.log("Grinder Models:", grinderModels);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -75,6 +76,13 @@ function AddCoffee() {
           <Radio value="oz">Oz</Radio>
         </RadioGroup>
         <FileUploader />
+        <Dropdown
+          label="Grinder"
+          options={grinderModels.map((model) => ({
+            id: model.id,
+            name: model.type,
+          }))}
+        />
         <Button type="submit">Add Coffee</Button>
       </Form>
     </div>
