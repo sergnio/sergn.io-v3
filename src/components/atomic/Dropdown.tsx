@@ -1,14 +1,16 @@
+import type { ListBoxItemProps } from "react-aria-components";
 import {
+  Autocomplete,
   Button,
-  ComboBox,
-  Input,
   Label,
   ListBox,
   ListBoxItem,
   Popover,
   Select,
   SelectValue,
+  useFilter,
 } from "react-aria-components";
+
 import { camelize } from "~/utils/transformers";
 
 export interface Option {
@@ -22,6 +24,8 @@ interface DropdownProps {
 }
 
 export const Dropdown = ({ label, options }: DropdownProps) => {
+  let { contains } = useFilter({ sensitivity: "base" });
+
   return (
     <Select name={camelize(label)}>
       <Label>{label}</Label>
@@ -30,22 +34,25 @@ export const Dropdown = ({ label, options }: DropdownProps) => {
         <span aria-hidden="true">▼</span>
       </Button>
       <Popover>
-        <ListBox key={"fasdfadsf"} items={options} />
-          {options.length > 0 ? (
-            options.map((method) => (
-              <ListBoxItem
-                key={method.id}
-                textValue={method.name}
-                value={method.id as unknown as object}
-              >
-                {method.name}
-              </ListBoxItem>
-            ))
-          ) : (
-            <ListBoxItem>No {label.toLowerCase()} found</ListBoxItem>
-          )}
-        </ListBox>
+        <Autocomplete filter={contains}>
+          <ListBox items={options}>
+            {(item) => <SelectItem>{item.name}</SelectItem>}
+          </ListBox>
+        </Autocomplete>
       </Popover>
     </Select>
   );
 };
+
+function SelectItem(props: ListBoxItemProps & { children: string }) {
+  return (
+    <ListBoxItem {...props} textValue={props.children}>
+      {({ isSelected }) => (
+        <>
+          <span>{props.children}</span>
+          {isSelected && <>checked</>}
+        </>
+      )}
+    </ListBoxItem>
+  );
+}
