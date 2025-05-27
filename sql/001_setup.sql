@@ -47,11 +47,10 @@ create table brew_method (
        name text not null unique
 );
 
--- Bridge table for coffee <> brew_method (many-to-many)
+-- Bridge table for coffee <> brew_method <> grinder_settings (many-to-many)
 create table coffee_brew_method (
-    id uuid primary key default gen_random_uuid(),
     coffee_id uuid references coffee(id) on delete cascade,
     brew_method_id uuid references brew_method(id),
-    grinder_settings_id uuid
+    grinder_settings_id uuid references grinder_settings(id),
+    primary key (coffee_id, brew_method_id, grinder_settings_id)
 );
-
