@@ -1,3 +1,4 @@
+import "@radix-ui/themes/styles.css";
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -15,9 +16,6 @@ import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { COFFEE_ROUTE, LOGIN_ROUTE, LOGOUT_ROUTE } from "~/constants/ui-routes";
 import { loggedInUserQueryOptions } from "~/utils/users";
-import "@radix-ui/themes/styles.css";
-import { Theme } from "@radix-ui/themes";
-import { ThemeProvider } from "next-themes";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -95,80 +93,76 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <ThemeProvider attribute="class">
-          <Theme>
-            <div className="p-2 flex gap-2 items-center text-lg">
+        <div className="p-2 flex gap-2 items-center text-lg">
+          <Link
+            to="/"
+            activeProps={{
+              className: "font-bold",
+            }}
+            activeOptions={{ exact: true }}
+          >
+            Home
+          </Link>{" "}
+          <Link
+            to={COFFEE_ROUTE}
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            Coffee
+          </Link>{" "}
+          <Link
+            to="/posts"
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            Posts
+          </Link>{" "}
+          <Link
+            to="/route-a"
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            Pathless Layout
+          </Link>{" "}
+          <Link
+            to="/deferred"
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            Deferred
+          </Link>{" "}
+          <Link
+            // @ts-expect-error
+            to="/this-route-does-not-exist"
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            This Route Does Not Exist
+          </Link>
+          <div className="ml-auto relative">
+            {user ? (
               <Link
-                to="/"
-                activeProps={{
-                  className: "font-bold",
-                }}
-                activeOptions={{ exact: true }}
+                to={LOGOUT_ROUTE}
+                className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
               >
-                Home
-              </Link>{" "}
-              <Link
-                to={COFFEE_ROUTE}
-                activeProps={{
-                  className: "font-bold",
-                }}
-              >
-                Coffee
-              </Link>{" "}
-              <Link
-                to="/posts"
-                activeProps={{
-                  className: "font-bold",
-                }}
-              >
-                Posts
-              </Link>{" "}
-              <Link
-                to="/route-a"
-                activeProps={{
-                  className: "font-bold",
-                }}
-              >
-                Pathless Layout
-              </Link>{" "}
-              <Link
-                to="/deferred"
-                activeProps={{
-                  className: "font-bold",
-                }}
-              >
-                Deferred
-              </Link>{" "}
-              <Link
-                // @ts-expect-error
-                to="/this-route-does-not-exist"
-                activeProps={{
-                  className: "font-bold",
-                }}
-              >
-                This Route Does Not Exist
+                Log out
               </Link>
-              <div className="ml-auto relative">
-                {user ? (
-                  <Link
-                    to={LOGOUT_ROUTE}
-                    className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                  >
-                    Log out
-                  </Link>
-                ) : (
-                  <Link
-                    to={LOGIN_ROUTE}
-                    aria-hidden
-                    className="absolute right-0 top-0 w-[100px] h-[50px] opacity-0"
-                  >
-                    Log in
-                  </Link>
-                )}
-              </div>
-            </div>
-          </Theme>
-        </ThemeProvider>
+            ) : (
+              <Link
+                to={LOGIN_ROUTE}
+                aria-hidden
+                className="absolute right-0 top-0 w-[100px] h-[50px] opacity-0"
+              >
+                Log in
+              </Link>
+            )}
+          </div>
+        </div>
         <hr />
         {children}
         <TanStackRouterDevtools position="bottom-right" />

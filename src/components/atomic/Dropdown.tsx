@@ -12,8 +12,8 @@ export interface Option {
 interface DropdownProps {
   label: string;
   options: Option[];
-  onSelect: (value: string) => void;
-  selectedValue: string;
+  onSelect: (value: Option) => void;
+  selectedValue: Option;
 }
 
 export const Dropdown = ({
