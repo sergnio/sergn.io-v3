@@ -1,5 +1,3 @@
--- ENUM for grinder type
-create type grinder_type as enum ('Manual', 'Niche Zero');
 
 -- Bag size table
 create table bag_size (
@@ -20,16 +18,28 @@ create table coffee (
     image text
     );
 
--- Grinder table
+-- ENUM for grinder type
+create type grinder_type as enum ('Manual', 'Niche Zero');
+
+-- Grinder model table (shared metadata)
+create table grinder_model (
+       id uuid primary key default gen_random_uuid(),
+       name text not null unique,
+       type grinder_type not null
+);
+
+-- Grinder table (user-specific grinder config)
 create table grinder (
-    id uuid primary key default gen_random_uuid(),
-    type grinder_type not null,
-    number integer,
-    rotations integer,
-    setting integer,
-    constraint grinder_field_check check (
-(type = 'Manual' and number is not null and rotations is not null and setting is null) or
-(type = 'Niche Zero' and setting is not null and number is null and rotations is null)));
+     id uuid primary key default gen_random_uuid(),
+     grinder_model_id uuid references grinder_model(id) not null,
+     number integer,
+     rotations integer,
+     setting integer,
+     constraint grinder_field_check check (
+         (number is not null and rotations is not null and setting is null) or
+         (number is null and rotations is null and setting is not null)
+         )
+);
 
 -- Brew method table (deduplicated)
 create table brew_method (
