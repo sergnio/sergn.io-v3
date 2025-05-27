@@ -1,13 +1,14 @@
 import {
-  ComboBox,
-  Label,
-  Input,
   Button,
-  Popover,
+  ComboBox,
+  Input,
+  Label,
   ListBox,
   ListBoxItem,
+  Popover,
+  Select,
+  SelectValue,
 } from "react-aria-components";
-import { Key } from "react";
 import { camelize } from "~/utils/transformers";
 
 export interface Option {
@@ -18,34 +19,33 @@ export interface Option {
 interface DropdownProps {
   label: string;
   options: Option[];
-  onSelectionChange?: (key: Key) => void;
 }
 
-export const Dropdown = ({
-  label,
-  options,
-  onSelectionChange,
-}: DropdownProps) => {
+export const Dropdown = ({ label, options }: DropdownProps) => {
   return (
-    <ComboBox onSelectionChange={(e) => onSelectionChange?.(e as Key)}>
+    <Select name={camelize(label)}>
       <Label>{label}</Label>
-      <div className="relative flex items-center gap-1">
-        <Input name={camelize(label)} />
-        <Button>▼</Button>
-      </div>
+      <Button>
+        <SelectValue />
+        <span aria-hidden="true">▼</span>
+      </Button>
       <Popover>
-        <ListBox>
+        <ListBox key={"fasdfadsf"} items={options} />
           {options.length > 0 ? (
             options.map((method) => (
-              <ListBoxItem key={method.id} textValue={method.name}>
+              <ListBoxItem
+                key={method.id}
+                textValue={method.name}
+                value={method.id as unknown as object}
+              >
                 {method.name}
               </ListBoxItem>
             ))
           ) : (
-            <ListBoxItem>No brew methods found</ListBoxItem>
+            <ListBoxItem>No {label.toLowerCase()} found</ListBoxItem>
           )}
         </ListBox>
       </Popover>
-    </ComboBox>
+    </Select>
   );
 };
