@@ -22,20 +22,20 @@ create table coffee (
     image text
 );
 
--- Grinder model table (shared metadata)
+-- Grinder_settings model table (shared metadata)
 create table grinder_model (
          id uuid primary key default gen_random_uuid(),
          type grinder_type not null
 );
 
--- Grinder table (user-specific grinder config)
-create table grinder (
+-- Grinder_settings table (user-specific grinder_settings config)
+create table grinder_settings (
      id uuid primary key default gen_random_uuid(),
-     grinder_model_id uuid references grinder_model(id) not null,
+     grinder_model_id uuid references grinder_settings_model(id) not null,
      number integer,
      rotations integer,
      setting integer,
-     constraint grinder_field_check check (
+     constraint grinder_settings_field_check check (
        (number is not null and rotations is not null and setting is null) or
        (number is null and rotations is null and setting is not null)
        )
@@ -52,6 +52,6 @@ create table coffee_brew_method (
     id uuid primary key default gen_random_uuid(),
     coffee_id uuid references coffee(id) on delete cascade,
     brew_method_id uuid references brew_method(id),
-    grinder_id uuid
+    grinder_settings_id uuid
 );
 
