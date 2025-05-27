@@ -14,6 +14,7 @@ export const FileUploader = () => {
         name="coffeeImage"
         accept="image/*"
         style={{ display: "none" }}
+        aria-hidden
         onChange={(e) => {
           const selectedFile = e.target.files?.[0] ?? null;
           setFile(selectedFile);
