@@ -1,5 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useFilter } from "react-aria-components";
+import {
+  Button,
+  FieldError,
+  Form,
+  Input,
+  Label,
+  TextField,
+  useFilter,
+} from "react-aria-components";
 import { Autocomplete } from "~/components/composite/autocomplete";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
@@ -20,20 +28,19 @@ function AddCoffee() {
       <h3>Add Coffee</h3>
       <p>Here you can add your favorite coffee.</p>
       {/* Add your form or components to add coffee here */}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="coffeeName">Coffee Name:</label>
-          <input type="text" id="coffeeName" name="coffeeName" required />
-        </div>
-        <div>
-          <Autocomplete
-            required
-            label={"Bought From"}
-            options={["SK Coffee", "Avo Coffee Roasters"]}
-          />
-        </div>
-        <button type="submit">Add Coffee</button>
-      </form>
+      <Form onSubmit={handleSubmit}>
+        <TextField name="email" type="email" isRequired>
+          <Label>Coffee Name</Label>
+          <Input required />
+          <FieldError />
+        </TextField>
+        <Autocomplete
+          required
+          label={"Bought From"}
+          options={["SK Coffee", "Avo Coffee Roasters"]}
+        />
+        <Button type="submit">Add Coffee</Button>
+      </Form>
     </div>
   );
 }

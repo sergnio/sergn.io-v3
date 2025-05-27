@@ -5,19 +5,31 @@
 @layer base {
   html {
     color-scheme: light dark;
+    --bg: theme(colors.gray.50);
+    --text: theme(colors.gray.900);
+    --border: theme(colors.gray.200);
+    --input-bg: oklch(0.352 0 89.876);
+
+    @apply bg-[var(--bg)] text-[var(--text)];
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html {
+      --bg: theme(colors.gray.950);
+      --text: theme(colors.gray.200);
+      --border: theme(colors.gray.800);
+    }
   }
 
   * {
-    @apply border-gray-200 dark:border-gray-800;
+    @apply border-[var(--border)];
   }
 
-  html,
   body {
-    @apply text-gray-900 bg-gray-50 dark:bg-gray-950 dark:text-gray-200;
+    @apply bg-[var(--bg)] text-[var(--text)];
   }
 
   .using-mouse * {
     outline: none !important;
   }
 }
-
