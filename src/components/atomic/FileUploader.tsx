@@ -1,25 +1,39 @@
 import { FileTrigger, Button } from "react-aria-components";
-import { useState } from "react";
-import { Undefinable } from "~/types/utils";
+import { useRef, useState } from "react";
+import { Nullable, Undefinable } from "~/types/utils";
 
 export const FileUploader = () => {
-  let [file, setFile] = useState<Undefinable<string>>();
+  const [file, setFile] = useState<Nullable<File>>(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
+      <input
+        ref={hiddenInputRef}
+        type="file"
+        name="coffeeImage"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={(e) => {
+          const selectedFile = e.target.files?.[0] ?? null;
+          setFile(selectedFile);
+        }}
+      />
       <FileTrigger
         acceptedFileTypes={["image/*"]}
         acceptDirectory={false}
         allowsMultiple={false}
-        onSelect={(e) => {
-          const files = e ? Array.from(e) : [];
-          const filenames = files.map((file) => file.name);
-          setFile(filenames[0]);
+        onSelect={(files) => {
+          const file = files?.[0] ?? null;
+          setFile(file);
+          if (hiddenInputRef.current) {
+            hiddenInputRef.current.files = files;
+          }
         }}
       >
         <Button>Select a file</Button>
       </FileTrigger>
-      {file && file}
+      {file && file.name}
     </>
   );
 };
