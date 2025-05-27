@@ -17,6 +17,7 @@ import {
 } from "react-aria-components";
 import { Autocomplete } from "~/components/composite/autocomplete";
 import { FormEvent } from "react";
+import { FileUploader } from "~/components/atomic/FileUploader";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -61,9 +62,11 @@ function AddCoffee() {
         </NumberField>
         <RadioGroup name="unit" defaultValue="g" isRequired>
           <Label>Unit of measurement</Label>
+          <span>(always shown in grams)</span>
           <Radio value="g">Grams</Radio>
           <Radio value="oz">Oz</Radio>
         </RadioGroup>
+        <FileUploader />
         <Button type="submit">Add Coffee</Button>
       </Form>
     </div>
