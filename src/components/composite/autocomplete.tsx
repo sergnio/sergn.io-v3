@@ -9,7 +9,6 @@ import {
 import "./Autocomplete.css";
 import { useOutsideClick } from "~/hooks/utilities/useOutsideClick";
 import { camelize } from "~/utils/transformers";
-import { uuid } from "zod/v4";
 
 interface Props
   extends Omit<
@@ -18,7 +17,7 @@ interface Props
   > {
   options: string[];
   defaultValue?: string;
-  label?: string;
+  label: string;
   onConfirm?: (selectedValue: string) => void;
   onChange?: (newValue: string) => void;
   passthroughStyles?: {
@@ -40,7 +39,7 @@ export const Autocomplete = ({
   passthroughStyles,
   ...rest
 }: Props) => {
-  const camelizedLabel = camelize(label ?? `autocomplete-${uuid()}`);
+  const camelizedLabel = camelize(label);
   const [value, setValue] = useState<string>(defaultValue ?? EMPTY);
   const [filtered, setFiltered] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(-1);

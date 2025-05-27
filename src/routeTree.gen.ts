@@ -26,7 +26,7 @@ import { Route as PathlessLayoutNestedLayoutImport } from './routes/_pathlessLay
 import { Route as PostsPostIdDeepImport } from './routes/posts_.$postId.deep'
 import { Route as PathlessLayoutNestedLayoutRouteBImport } from './routes/_pathlessLayout/_nested-layout/route-b'
 import { Route as PathlessLayoutNestedLayoutRouteAImport } from './routes/_pathlessLayout/_nested-layout/route-a'
-import { Route as AuthRouteCoffeeAddImport } from './routes/_authRoute/coffee.add'
+import { Route as AuthRouteCoffeeAddImport } from './routes/_authRoute/coffee/add'
 
 // Create/Update Routes
 
@@ -512,7 +512,7 @@ export const routeTree = rootRoute
       "parent": "/posts"
     },
     "/_authRoute/coffee/add": {
-      "filePath": "_authRoute/coffee.add.tsx",
+      "filePath": "_authRoute/coffee/add.tsx",
       "parent": "/_authRoute"
     },
     "/_pathlessLayout/_nested-layout/route-a": {
