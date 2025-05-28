@@ -23,6 +23,7 @@ interface DropdownProps {
   options: Option[];
 }
 
+/** Glorious dropdown */
 export const Dropdown = ({ label, options }: DropdownProps) => {
   let { contains } = useFilter({ sensitivity: "base" });
 
