@@ -17,7 +17,7 @@ import autocompleteCss from "~/components/composite/autocomplete.css?url";
 import { seo } from "~/utils/seo";
 import { COFFEE_ROUTE, LOGIN_ROUTE, LOGOUT_ROUTE } from "~/constants/ui-routes";
 import { loggedInUserQueryOptions } from "~/utils/users";
-import { Theme } from "@radix-ui/themes";
+import { RadixThemeProvider } from "~/providers/RadixThemeProvider";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -96,80 +96,78 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Theme>
-          <div className="p-2 flex gap-2 items-center text-lg">
-            <Link
-              to="/"
-              activeProps={{
-                className: "font-bold",
-              }}
-              activeOptions={{ exact: true }}
-            >
-              Home
-            </Link>{" "}
-            <Link
-              to={COFFEE_ROUTE}
-              activeProps={{
-                className: "font-bold",
-              }}
-            >
-              Coffee
-            </Link>{" "}
-            <Link
-              to="/posts"
-              activeProps={{
-                className: "font-bold",
-              }}
-            >
-              Posts
-            </Link>{" "}
-            <Link
-              to="/route-a"
-              activeProps={{
-                className: "font-bold",
-              }}
-            >
-              Pathless Layout
-            </Link>{" "}
-            <Link
-              to="/deferred"
-              activeProps={{
-                className: "font-bold",
-              }}
-            >
-              Deferred
-            </Link>{" "}
-            <Link
-              // @ts-expect-error
-              to="/this-route-does-not-exist"
-              activeProps={{
-                className: "font-bold",
-              }}
-            >
-              This Route Does Not Exist
-            </Link>
-            <div className="ml-auto relative">
-              {user ? (
-                <Link
-                  to={LOGOUT_ROUTE}
-                  className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                >
-                  Log out
-                </Link>
-              ) : (
-                <Link
-                  to={LOGIN_ROUTE}
-                  aria-hidden
-                  className="absolute right-0 top-0 w-[100px] h-[50px] opacity-0"
-                >
-                  Log in
-                </Link>
-              )}
-            </div>
+        <div className="p-2 flex gap-2 items-center text-lg">
+          <Link
+            to="/"
+            activeProps={{
+              className: "font-bold",
+            }}
+            activeOptions={{ exact: true }}
+          >
+            Home
+          </Link>{" "}
+          <Link
+            to={COFFEE_ROUTE}
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            Coffee
+          </Link>{" "}
+          <Link
+            to="/posts"
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            Posts
+          </Link>{" "}
+          <Link
+            to="/route-a"
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            Pathless Layout
+          </Link>{" "}
+          <Link
+            to="/deferred"
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            Deferred
+          </Link>{" "}
+          <Link
+            // @ts-expect-error
+            to="/this-route-does-not-exist"
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            This Route Does Not Exist
+          </Link>
+          <div className="ml-auto relative">
+            {user ? (
+              <Link
+                to={LOGOUT_ROUTE}
+                className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                Log out
+              </Link>
+            ) : (
+              <Link
+                to={LOGIN_ROUTE}
+                aria-hidden
+                className="absolute right-0 top-0 w-[100px] h-[50px] opacity-0"
+              >
+                Log in
+              </Link>
+            )}
           </div>
-        </Theme>
+        </div>
         <hr />
-        {children}
+        <RadixThemeProvider>{children}</RadixThemeProvider>
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <Scripts />

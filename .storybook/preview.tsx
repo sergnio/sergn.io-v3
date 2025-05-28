@@ -3,7 +3,6 @@ import "@radix-ui/themes/styles.css";
 import "../src/styles/app.css";
 import { Theme } from "@radix-ui/themes";
 
-// add theme wrapper
 const withTheme = (Story: any) => (
   <Theme>
     <Story />
