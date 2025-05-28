@@ -17,5 +17,13 @@ export const RadixThemeProvider = ({
   // Prevent SSR from rendering anything inside the Theme
   if (!isMounted) return null;
 
-  return <Theme asChild={!isRoot}>{children}</Theme>;
+  return (
+    <Theme
+      style={{
+        minHeight: isRoot ? "initial" : "100vh",
+      }}
+    >
+      {children}
+    </Theme>
+  );
 };
