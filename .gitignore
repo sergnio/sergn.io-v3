@@ -93,3 +93,5 @@ apps/online-check-in/public/utils
 
 # Jetbrains
 .idea
+
+*storybook.log

@@ -3,25 +3,27 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    color-scheme: light dark;
+  :root {
     --bg: theme(colors.gray.50);
     --text: theme(colors.gray.900);
     --border: theme(colors.gray.200);
     --input-bg: oklch(0.98 0 0.5);
     --input-border: theme(colors.black);
-
-    @apply bg-[var(--bg)] text-[var(--text)];
   }
 
   @media (prefers-color-scheme: dark) {
-    html {
+    :root {
       --bg: theme(colors.gray.950);
       --text: theme(colors.gray.200);
       --border: theme(colors.gray.800);
       --input-bg: oklch(0.352 0 89.876);
       --input-border: theme(colors.white);
     }
+  }
+
+  html {
+    color-scheme: light dark;
+    @apply bg-[var(--bg)] text-[var(--text)];
   }
 
   * {
