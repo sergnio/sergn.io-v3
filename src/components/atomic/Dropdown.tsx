@@ -1,16 +1,18 @@
-import { DropdownMenu, Button } from "@radix-ui/themes";
+import { Button, DropdownMenu } from "@radix-ui/themes";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { Optional } from "~/types/utils";
 
 export interface Option {
   id: string;
   name: string;
 }
 
+export type DropdownValue = Optional<Option>;
+
 interface DropdownProps {
   label: string;
   options: Option[];
-  value: Option | null;
+  value: DropdownValue;
   onChange: (option: Option) => void;
 }
 
@@ -22,12 +24,11 @@ export const Dropdown = ({
 }: DropdownProps) => {
   return (
     <div>
-      <label className="block text-sm font-medium mb-1">{label}</label>
-
       <DropdownMenu.Root>
+        <DropdownMenu.Label>{label}</DropdownMenu.Label>
         <DropdownMenu.Trigger>
           <Button variant="soft">
-            {value?.name || "Select..."}
+            {value?.name || `Select a ${label.toLowerCase()}`}
             <DropdownMenu.TriggerIcon />
           </Button>
         </DropdownMenu.Trigger>

@@ -3,24 +3,22 @@ import {
   Button,
   FieldError,
   Form,
-  Group,
   Input,
   Label,
-  NumberField,
   Radio,
   RadioGroup,
   TextField,
-  useFilter,
 } from "react-aria-components";
 import { Autocomplete } from "~/components/composite/autocomplete";
 import { FormEvent, useState } from "react";
 import { FileUploader, FileValue } from "~/components/atomic/FileUploader";
 import { fetchBrewMethodsQueryOptions } from "~/utils/brewMethod";
 import { useQuery } from "@tanstack/react-query";
-import { Dropdown, DropdownOptionValue } from "~/components/atomic/Dropdown";
-import { useGrinderModels } from "~/hooks/queries/useGrinderModels";
+import { Dropdown, DropdownValue } from "~/components/atomic/Dropdown";
+import { useGrinderModelsQuery } from "~/hooks/queries/useGrinderModelsQuery";
 import { NumberInput } from "~/components/atomic/NumberInput";
-import { useBagSizes } from "~/hooks/queries/useBagSizes";
+import { useBagSizesQuery } from "~/hooks/queries/useBagSizesQuery";
+import { useBrewMethodQuery } from "~/hooks/queries/useBrewMethodQuery";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -30,15 +28,13 @@ export const Route = createFileRoute("/_authRoute/coffee/add")({
 });
 
 function AddCoffee() {
-  const [dropdownValue, setDropdownValue] = useState<DropdownOptionValue>(null);
+  const [grinder, setGrinder] = useState<DropdownValue>();
+  const [brewMethod, setBrewMethod] = useState<DropdownValue>();
   const [file, setFile] = useState<FileValue>();
 
-  const { data: brewMethods } = useQuery(fetchBrewMethodsQueryOptions());
-  const { grinderModels } = useGrinderModels();
-  const { bagSizes } = useBagSizes();
-  console.log("Brew Methods:", brewMethods);
-  console.log("Grinder Models:", grinderModels);
-  console.log("Bag Sizes:", bagSizes);
+  const { brewMethods } = useBrewMethodQuery();
+  const { grinderModels } = useGrinderModelsQuery();
+  const { bagSizes } = useBagSizesQuery();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,13 +76,22 @@ function AddCoffee() {
           <Radio value="oz">Oz</Radio>
         </RadioGroup>
         <Dropdown
+          label={"Brew Method"}
+          options={brewMethods?.map((method) => ({
+            id: method.id,
+            name: method.name,
+          }))}
+          value={brewMethod}
+          onChange={setBrewMethod}
+        />
+        <Dropdown
           label="Grinder"
           options={grinderModels.map((model) => ({
             id: model.id,
             name: model.type,
           }))}
-          value={dropdownValue}
-          onChange={setDropdownValue}
+          value={grinder}
+          onChange={setGrinder}
         />
         <FileUploader file={file} onChange={setFile} />
         <Button type="submit">Add Coffee</Button>
