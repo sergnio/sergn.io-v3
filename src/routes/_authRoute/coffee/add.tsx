@@ -1,24 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Button,
-  FieldError,
-  Form,
-  Input,
-  Label,
-  Radio,
-  RadioGroup,
-  TextField,
-} from "react-aria-components";
+import { Button, Label, Radio, RadioGroup } from "react-aria-components";
 import { Autocomplete } from "~/components/composite/autocomplete";
-import { FormEvent, useState } from "react";
-import { FileUploader, FileValue } from "~/components/atomic/FileUploader";
+import { FileUploader } from "~/components/atomic/FileUploader";
 import { fetchBrewMethodsQueryOptions } from "~/utils/brewMethod";
-import { useQuery } from "@tanstack/react-query";
 import { Dropdown, DropdownValue } from "~/components/atomic/Dropdown";
 import { useGrinderModelsQuery } from "~/hooks/queries/useGrinderModelsQuery";
 import { NumberInput } from "~/components/atomic/NumberInput";
 import { useBagSizesQuery } from "~/hooks/queries/useBagSizesQuery";
 import { useBrewMethodQuery } from "~/hooks/queries/useBrewMethodQuery";
+import { Controller, useForm } from "react-hook-form";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -27,75 +17,136 @@ export const Route = createFileRoute("/_authRoute/coffee/add")({
   },
 });
 
+type FormValues = {
+  coffeeName: string;
+  roaster: string;
+  unit: "g" | "oz";
+  brewMethod: DropdownValue;
+  grinder: DropdownValue;
+  price: number;
+  file: File | null;
+};
+
 function AddCoffee() {
-  const [grinder, setGrinder] = useState<DropdownValue>();
-  const [brewMethod, setBrewMethod] = useState<DropdownValue>();
-  const [file, setFile] = useState<FileValue>();
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<FormValues>();
 
   const { brewMethods } = useBrewMethodQuery();
   const { grinderModels } = useGrinderModelsQuery();
   const { bagSizes } = useBagSizesQuery();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    const form = new FormData(e.currentTarget);
-    const data = Object.fromEntries(form.entries());
-
-    console.log("Submitted", data);
+  const onSubmit = (data: FormValues) => {
+    console.log("Submitted:", data);
   };
 
   return (
     <div className="p-2">
       <h3>Add Coffee</h3>
       <p>Here you can add your favorite coffee.</p>
-      {/* Add your form or components to add coffee here */}
-      <Form onSubmit={handleSubmit}>
-        <TextField name="email" type="email" isRequired>
+
+      <div className="space-y-4">
+        <div>
           <Label>Coffee Name</Label>
-          <Input required />
-          <FieldError />
-        </TextField>
-        <TextField name="roaster" type="text" isRequired>
+          <input {...register("coffeeName", { required: true })} />
+          {errors.coffeeName && <span className="text-red-600">Required</span>}
+        </div>
+
+        <div>
           <Label>Roaster</Label>
-          <Input required />
-          <FieldError />
-        </TextField>
-        <NumberInput label={"Price ($)"} incrementDecrementButtons />
+          <input {...register("roaster", { required: true })} />
+          {errors.roaster && <span className="text-red-600">Required</span>}
+        </div>
+
+        <Controller
+          name="price"
+          control={control}
+          defaultValue={0}
+          render={({ field }) => (
+            <NumberInput
+              label="Price ($)"
+              incrementDecrementButtons
+              {...field}
+            />
+          )}
+        />
+
         <Autocomplete
-          label={"Size of bag"}
+          label="Size of bag"
           options={bagSizes.map((size) => ({
             id: size.id,
             name: size.g != null ? `${size.g}g` : `${size.oz}oz`,
           }))}
         />
-        <RadioGroup name="unit" defaultValue="g" isRequired>
-          <Label>Unit of measurement</Label>
-          <span>(always shown in grams)</span>
-          <Radio value="g">Grams</Radio>
-          <Radio value="oz">Oz</Radio>
-        </RadioGroup>
-        <Dropdown
-          label={"Brew Method"}
-          options={brewMethods?.map((method) => ({
-            id: method.id,
-            name: method.name,
-          }))}
-          value={brewMethod}
-          onChange={setBrewMethod}
+
+        <Controller
+          name="unit"
+          control={control}
+          defaultValue="g"
+          render={({ field }) => (
+            <RadioGroup {...field}>
+              <Label>Unit of measurement</Label>
+              <span>(always shown in grams)</span>
+              <Radio value="g">Grams</Radio>
+              <Radio value="oz">Oz</Radio>
+            </RadioGroup>
+          )}
         />
-        <Dropdown
-          label="Grinder"
-          options={grinderModels.map((model) => ({
-            id: model.id,
-            name: model.type,
-          }))}
-          value={grinder}
-          onChange={setGrinder}
+
+        <Controller
+          name="brewMethod"
+          control={control}
+          render={({ field }) => (
+            <Dropdown
+              label="Brew Method"
+              options={brewMethods.map((method) => ({
+                id: method.id,
+                name: method.name,
+              }))}
+              value={field.value}
+              onChange={(val) => {
+                field.onChange(val);
+              }}
+            />
+          )}
         />
-        <FileUploader file={file} onChange={setFile} />
-        <Button type="submit">Add Coffee</Button>
-      </Form>
+
+        <Controller
+          name="grinder"
+          control={control}
+          render={({ field }) => (
+            <Dropdown
+              label="Grinder"
+              options={grinderModels.map((model) => ({
+                id: model.id,
+                name: model.type,
+              }))}
+              value={field.value}
+              onChange={(val) => {
+                field.onChange(val);
+              }}
+            />
+          )}
+        />
+
+        <Controller
+          name="file"
+          control={control}
+          render={({ field }) => (
+            <FileUploader
+              file={field.value}
+              onChange={(val) => {
+                field.onChange(val);
+              }}
+            />
+          )}
+        />
+
+        <Button onClick={handleSubmit(onSubmit)}>Add Coffee</Button>
+      </div>
     </div>
   );
 }
