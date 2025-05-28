@@ -1,17 +1,7 @@
-import type { ListBoxItemProps } from "react-aria-components";
-import {
-  Autocomplete,
-  Button,
-  Label,
-  ListBox,
-  ListBoxItem,
-  Popover,
-  Select,
-  SelectValue,
-  useFilter,
-} from "react-aria-components";
-
-import { camelize } from "~/utils/transformers";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import clsx from "clsx";
 
 export interface Option {
   id: string;
@@ -23,37 +13,52 @@ interface DropdownProps {
   options: Option[];
 }
 
-/** Glorious dropdown */
+/** Radix Dropdown */
 export const Dropdown = ({ label, options }: DropdownProps) => {
-  let { contains } = useFilter({ sensitivity: "base" });
+  const [selected, setSelected] = useState<Option | null>(null);
 
   return (
-    <Select name={camelize(label)} className="relative inline-block text-left">
-      <Label>{label}</Label>
-      <Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50">
-        <SelectValue />
-        <span aria-hidden="true">▼</span>
-      </Button>
-      <Popover>
-        <Autocomplete filter={contains}>
-          <ListBox items={options}>
-            {(item) => <SelectItem>{item.name}</SelectItem>}
-          </ListBox>
-        </Autocomplete>
-      </Popover>
-    </Select>
+    <div className="inline-block text-left">
+      <span className="block text-sm font-medium mb-1">{label}</span>
+
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild>
+          <button
+            className={clsx(
+              "inline-flex w-full justify-between items-center rounded-md px-3 py-2 text-sm font-semibold",
+              "bg-white text-gray-900 shadow ring-1 ring-gray-300 hover:bg-gray-50",
+            )}
+          >
+            {selected?.name || "Select..."}
+            <ChevronDownIcon className="ml-2 h-4 w-4" />
+          </button>
+        </DropdownMenu.Trigger>
+
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content
+            sideOffset={5}
+            className="z-50 w-[var(--radix-dropdown-menu-trigger-width)] rounded-md bg-white p-1 shadow-lg ring-1 ring-gray-200"
+          >
+            {options.map((option) => (
+              <DropdownMenu.Item
+                key={option.id}
+                className={clsx(
+                  "cursor-pointer select-none rounded-sm px-3 py-2 text-sm text-gray-900 hover:bg-gray-100",
+                  selected?.id === option.id && "font-semibold",
+                )}
+                onSelect={() => setSelected(option)}
+              >
+                <div className="flex items-center justify-between">
+                  <span>{option.name}</span>
+                  {selected?.id === option.id && (
+                    <CheckIcon className="h-4 w-4 text-green-600" />
+                  )}
+                </div>
+              </DropdownMenu.Item>
+            ))}
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
+    </div>
   );
 };
-
-function SelectItem(props: ListBoxItemProps & { children: string }) {
-  return (
-    <ListBoxItem {...props} textValue={props.children}>
-      {({ isSelected }) => (
-        <>
-          <span>{props.children}</span>
-          {isSelected && <>checked</>}
-        </>
-      )}
-    </ListBoxItem>
-  );
-}
