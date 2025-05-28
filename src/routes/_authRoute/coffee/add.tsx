@@ -9,6 +9,7 @@ import { NumberInput } from "~/components/atomic/NumberInput";
 import { useBagSizesQuery } from "~/hooks/queries/useBagSizesQuery";
 import { useBrewMethodQuery } from "~/hooks/queries/useBrewMethodQuery";
 import { Controller, useForm } from "react-hook-form";
+import { Form } from "radix-ui";
 
 export const Route = createFileRoute("/_authRoute/coffee/add")({
   component: AddCoffee,
@@ -44,7 +45,7 @@ function AddCoffee() {
   };
 
   return (
-    <div className="p-2">
+    <Form.Root className="p-2">
       <h3>Add Coffee</h3>
       <p>Here you can add your favorite coffee.</p>
 
@@ -147,6 +148,6 @@ function AddCoffee() {
 
         <Button onClick={handleSubmit(onSubmit)}>Add Coffee</Button>
       </div>
-    </div>
+    </Form.Root>
   );
 }
