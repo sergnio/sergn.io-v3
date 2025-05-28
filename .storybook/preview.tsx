@@ -4,7 +4,7 @@ import "../src/styles/app.css";
 import { RadixThemeProvider } from "~/providers/RadixThemeProvider";
 
 const withTheme = (Story: any) => (
-  <RadixThemeProvider>
+  <RadixThemeProvider isRoot={false}>
     <Story />
   </RadixThemeProvider>
 );

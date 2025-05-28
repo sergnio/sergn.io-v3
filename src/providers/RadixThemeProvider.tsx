@@ -1,11 +1,13 @@
 import { Theme } from "@radix-ui/themes";
-import { useState, useEffect } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 
+interface Props {
+  isRoot?: boolean;
+}
 export const RadixThemeProvider = ({
   children,
-}: {
-  children: React.ReactNode;
-}) => {
+  isRoot = true,
+}: PropsWithChildren<Props>) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -15,5 +17,5 @@ export const RadixThemeProvider = ({
   // Prevent SSR from rendering anything inside the Theme
   if (!isMounted) return null;
 
-  return <Theme>{children}</Theme>;
+  return <Theme asChild={!isRoot}>{children}</Theme>;
 };
