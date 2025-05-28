@@ -1,12 +1,12 @@
 import type { Preview } from "@storybook/react";
 import "@radix-ui/themes/styles.css";
 import "../src/styles/app.css";
-import { Theme } from "@radix-ui/themes";
+import { RadixThemeProvider } from "~/providers/RadixThemeProvider";
 
 const withTheme = (Story: any) => (
-  <Theme>
+  <RadixThemeProvider>
     <Story />
-  </Theme>
+  </RadixThemeProvider>
 );
 
 const preview: Preview = {
