@@ -3,16 +3,18 @@ import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { Nullable } from "~/types/utils";
 
-export interface Option {
+export interface DropdownOption {
   id: string;
   name: string;
 }
 
+export type DropdownOptionValue = Nullable<DropdownOption>;
+
 interface DropdownProps {
   label: string;
-  options: Option[];
-  value: Nullable<Option>;
-  onChange: (option: Option) => void;
+  options: DropdownOption[];
+  value: DropdownOptionValue;
+  onChange: (option: DropdownOption) => void;
 }
 
 /** Radix Dropdown (Controlled) */

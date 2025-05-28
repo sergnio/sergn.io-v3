@@ -8,17 +8,17 @@ import {
 } from "react";
 import { useOutsideClick } from "~/hooks/utilities/useOutsideClick";
 import { camelize } from "~/utils/transformers";
-import { Option } from "~/components/atomic/Dropdown";
+import { DropdownOption } from "~/components/atomic/Dropdown";
 
 interface Props
   extends Omit<
     InputHTMLAttributes<HTMLInputElement>,
     "placeholder" | "onChange" | "id" | "name"
   > {
-  options: Option[];
-  defaultValue?: Option;
+  options: DropdownOption[];
+  defaultValue?: DropdownOption;
   label: string;
-  onConfirm?: (selectedValue: Option) => void;
+  onConfirm?: (selectedValue: DropdownOption) => void;
   onChange?: (newValue: string) => void;
   passthroughStyles?: {
     input?: string;
@@ -41,7 +41,7 @@ export const Autocomplete = ({
 }: Props) => {
   const camelizedLabel = camelize(label);
   const [value, setValue] = useState<string>(defaultValue?.name ?? EMPTY);
-  const [filtered, setFiltered] = useState<Option[]>([]);
+  const [filtered, setFiltered] = useState<DropdownOption[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -85,7 +85,7 @@ export const Autocomplete = ({
     }
   };
 
-  const handleOptionClick = (option: Option) => {
+  const handleOptionClick = (option: DropdownOption) => {
     setValue(option.name);
     onConfirm?.(option);
     setIsOpen(false);

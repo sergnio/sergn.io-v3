@@ -13,11 +13,11 @@ import {
   useFilter,
 } from "react-aria-components";
 import { Autocomplete } from "~/components/composite/autocomplete";
-import { FormEvent } from "react";
-import { FileUploader } from "~/components/atomic/FileUploader";
+import { FormEvent, useState } from "react";
+import { FileUploader, FileValue } from "~/components/atomic/FileUploader";
 import { fetchBrewMethodsQueryOptions } from "~/utils/brewMethod";
 import { useQuery } from "@tanstack/react-query";
-import { Dropdown } from "~/components/atomic/Dropdown";
+import { Dropdown, DropdownOptionValue } from "~/components/atomic/Dropdown";
 import { useGrinderModels } from "~/hooks/queries/useGrinderModels";
 import { NumberInput } from "~/components/atomic/NumberInput";
 import { useBagSizes } from "~/hooks/queries/useBagSizes";
@@ -30,7 +30,8 @@ export const Route = createFileRoute("/_authRoute/coffee/add")({
 });
 
 function AddCoffee() {
-  const { contains } = useFilter({ sensitivity: "base" });
+  const [dropdownValue, setDropdownValue] = useState<DropdownOptionValue>(null);
+  const [file, setFile] = useState<FileValue>();
 
   const { data: brewMethods } = useQuery(fetchBrewMethodsQueryOptions());
   const { grinderModels } = useGrinderModels();
@@ -84,8 +85,10 @@ function AddCoffee() {
             id: model.id,
             name: model.type,
           }))}
+          value={dropdownValue}
+          onChange={setDropdownValue}
         />
-        <FileUploader />
+        <FileUploader file={file} onChange={setFile} />
         <Button type="submit">Add Coffee</Button>
       </Form>
     </div>

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Dropdown, Option } from "./Dropdown";
+import { Dropdown, DropdownOption } from "./Dropdown";
 
 const meta: Meta<typeof Dropdown> = {
-  title: "Dropdown/Dropdown",
+  title: "Atomic/Dropdown",
   component: Dropdown,
   parameters: {
     layout: "centered",
@@ -16,7 +16,7 @@ type Story = StoryObj<typeof Dropdown>;
 
 export const Default: Story = {
   render: (args) => {
-    const [selected, setSelected] = useState<Option | null>(null);
+    const [selected, setSelected] = useState<DropdownOption | null>(null);
 
     return (
       <Dropdown
