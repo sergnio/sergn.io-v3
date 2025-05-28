@@ -19,7 +19,6 @@ export const FileUploader = ({ file, onChange }: Props) => {
       >
         {file ? "Change file" : "Choose a file"}
       </button>
-
       <input
         ref={hiddenInputRef}
         type="file"
@@ -30,6 +29,7 @@ export const FileUploader = ({ file, onChange }: Props) => {
           onChange(selectedFile);
         }}
         className="hidden"
+        aria-hidden
       />
 
       {file && <p className="mt-2 text-sm text-gray-700">{file.name}</p>}
