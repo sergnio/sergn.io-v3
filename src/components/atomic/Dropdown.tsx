@@ -1,7 +1,7 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
 import clsx from "clsx";
+import { Nullable } from "~/types/utils";
 
 export interface Option {
   id: string;
@@ -11,12 +11,17 @@ export interface Option {
 interface DropdownProps {
   label: string;
   options: Option[];
+  value: Nullable<Option>;
+  onChange: (option: Option) => void;
 }
 
-/** Radix Dropdown */
-export const Dropdown = ({ label, options }: DropdownProps) => {
-  const [selected, setSelected] = useState<Option | null>(null);
-
+/** Radix Dropdown (Controlled) */
+export const Dropdown = ({
+  label,
+  options,
+  value,
+  onChange,
+}: DropdownProps) => {
   return (
     <div className="inline-block text-left">
       <span className="block text-sm font-medium mb-1">{label}</span>
@@ -29,7 +34,7 @@ export const Dropdown = ({ label, options }: DropdownProps) => {
               "bg-white text-gray-900 shadow ring-1 ring-gray-300 hover:bg-gray-50",
             )}
           >
-            {selected?.name || "Select..."}
+            {value?.name || "Select..."}
             <ChevronDownIcon className="ml-2 h-4 w-4" />
           </button>
         </DropdownMenu.Trigger>
@@ -44,13 +49,13 @@ export const Dropdown = ({ label, options }: DropdownProps) => {
                 key={option.id}
                 className={clsx(
                   "cursor-pointer select-none rounded-sm px-3 py-2 text-sm text-gray-900 hover:bg-gray-100",
-                  selected?.id === option.id && "font-semibold",
+                  value?.id === option.id && "font-semibold",
                 )}
-                onSelect={() => setSelected(option)}
+                onSelect={() => onChange(option)}
               >
                 <div className="flex items-center justify-between">
                   <span>{option.name}</span>
-                  {selected?.id === option.id && (
+                  {value?.id === option.id && (
                     <CheckIcon className="h-4 w-4 text-green-600" />
                   )}
                 </div>
